@@ -11,6 +11,7 @@ public class Book {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Column (name = "bid")
     private int id;
 
     @Column
@@ -28,6 +29,97 @@ public class Book {
     @ManyToOne
     private Author author;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    List<Store> storeList;
+    @OneToMany(mappedBy = "book")
+    private List<BookToStore> storeList;
+
+    //    ---------------------------------------------------------------------
+
+    public Book(){}
+
+    public Book(int id, String isbn, LocalDate dob, int edition, String title, Author author, List<BookToStore> storeList) {
+        this.id = id;
+        this.isbn = isbn;
+        this.dob = dob;
+        this.edition = edition;
+        this.title = title;
+        this.author = author;
+        this.storeList = storeList;
+    }
+
+    //    ---------------------------------------------------------------------
+
+    public int getId() {
+        return id;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public LocalDate getDob() {
+        return dob;
+    }
+
+    public int getEdition() {
+        return edition;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public List<BookToStore> getStoreList() {
+        return storeList;
+    }
+
+    //    ---------------------------------------------------------------------
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public void setDob(LocalDate dob) {
+        this.dob = dob;
+    }
+
+    public void setEdition(int edition) {
+        this.edition = edition;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
+    }
+
+    public void setStoreList(List<BookToStore> storeList) {
+        this.storeList = storeList;
+    }
+
+    //    ---------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return "\nBook{" +
+                "id=" + id +
+                ", isbn='" + isbn + '\'' +
+                ", dob=" + dob +
+                ", edition=" + edition +
+                ", title='" + title + '\'' +
+                ", author=" + author +
+                ", storeList=" + storeList +
+                '}';
+    }
+
+    //    ---------------------------------------------------------------------
 }
