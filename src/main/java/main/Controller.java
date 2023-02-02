@@ -17,6 +17,12 @@ public class Controller implements AutoCloseable {
     public void close() throws Exception {
         model.close();
     }
+
+    public void createTables(){
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+        session.getTransaction().commit();
+    }
 /*
     public void initStudentsAndCourses() {
         Session s = model.getSession();

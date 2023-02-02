@@ -2,9 +2,11 @@ package model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
-@Table
-public class Stores {
+@Table (name = "VN_Stores")
+public class Store {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -16,5 +18,9 @@ public class Stores {
 
     @Column
     String owner;
+
+    @ManyToMany(mappedBy = "storeList")
+    private List<Book> bookList;
+
 
 }

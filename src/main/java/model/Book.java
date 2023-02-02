@@ -3,10 +3,11 @@ package model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
-@Table
-public class Books {
+@Table (name = "VN_Books")
+public class Book {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -24,7 +25,9 @@ public class Books {
     @Column
     private String title;
 
-    @ManyToMany
-    @Column
-    private int author;
+    @ManyToOne
+    private Author author;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    List<Store> storeList;
 }

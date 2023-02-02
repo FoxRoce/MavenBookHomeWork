@@ -48,7 +48,7 @@ public class App {
 
             switch (option) {
                 case "0" -> mainMenu(sc);
-//                case "1" ->
+                case "1" -> controller.createTables();
 //                case "2" ->
 //                case "3" ->
 //                case "4" ->
@@ -60,6 +60,7 @@ public class App {
     private void printAddMenu(){
         System.out.println("=".repeat(30));
         System.out.println("\t0 - Back to Main Menu...");
+        System.out.println("\t1 - Create Tables");
         System.out.println("=".repeat(30));
     }
 

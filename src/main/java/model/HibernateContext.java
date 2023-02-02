@@ -29,11 +29,10 @@ public class HibernateContext implements AutoCloseable {
 
             configuration.setProperties(props);
 
-            configuration.addAnnotatedClass(Authors.class);
-            configuration.addAnnotatedClass(Books.class);
-            configuration.addAnnotatedClass(Stores.class);
-//            configuration.addAnnotatedClass(Order.class);
-//            configuration.addAnnotatedClass(DeliveryItem.class);
+            configuration.addAnnotatedClass(Author.class);
+            configuration.addAnnotatedClass(Book.class);
+            configuration.addAnnotatedClass(Store.class);
+            configuration.addAnnotatedClass(BookToStore.class);
 
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                     .applySettings(configuration.getProperties())
