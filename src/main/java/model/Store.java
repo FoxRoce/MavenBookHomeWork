@@ -20,7 +20,7 @@ public class Store {
     private String owner;
 
     @Column
-    private boolean active;
+    private boolean active = false;
 
     @OneToMany(mappedBy = "store")
     private List<BookToStore> bookList;

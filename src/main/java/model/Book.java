@@ -26,13 +26,18 @@ public class Book {
     @Column
     private String title;
 
+    @Column
+    private boolean active = true;
+
     @ManyToOne
     private Author author;
 
     @OneToMany(mappedBy = "book")
     private List<BookToStore> storeList;
 
+
     //    ---------------------------------------------------------------------
+
 
     public Book(){}
 
@@ -46,7 +51,9 @@ public class Book {
         this.storeList = storeList;
     }
 
+
     //    ---------------------------------------------------------------------
+
 
     public int getId() {
         return id;
@@ -55,7 +62,6 @@ public class Book {
     public String getIsbn() {
         return isbn;
     }
-
     public LocalDate getDob() {
         return dob;
     }
@@ -68,6 +74,10 @@ public class Book {
         return title;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
     public Author getAuthor() {
         return author;
     }
@@ -76,12 +86,12 @@ public class Book {
         return storeList;
     }
 
+
     //    ---------------------------------------------------------------------
 
     public void setId(int id) {
         this.id = id;
     }
-
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
@@ -98,6 +108,10 @@ public class Book {
         this.title = title;
     }
 
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public void setAuthor(Author author) {
         this.author = author;
     }
@@ -106,16 +120,19 @@ public class Book {
         this.storeList = storeList;
     }
 
+
     //    ---------------------------------------------------------------------
+
 
     @Override
     public String toString() {
-        return "\nBook{" +
+        return "Book{" +
                 "id=" + id +
                 ", isbn='" + isbn + '\'' +
                 ", dob=" + dob +
                 ", edition=" + edition +
                 ", title='" + title + '\'' +
+                ", active=" + active +
                 ", author=" + author +
                 ", storeList=" + storeList +
                 '}';

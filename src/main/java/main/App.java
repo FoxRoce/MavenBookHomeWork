@@ -49,7 +49,8 @@ public class App {
                 case "1" -> controller.createTables();
                 case "2" -> addBookMenu(sc);
                 case "3" -> addNewAuthorMenu(sc);
-//                case "4" ->
+                case "4" -> addNewStoreMenu(sc);
+                case "5" -> addBooksToStoreMenu(sc);
                 default -> System.out.println("Unknown option...");
             }
         }
@@ -61,6 +62,8 @@ public class App {
         System.out.println("\t1 - Create Tables");
         System.out.println("\t2 - Add New Book");
         System.out.println("\t3 - Add New Author");
+        System.out.println("\t4 - Add New Store");
+        System.out.println("\t5 - Add Books to Store");
         System.out.println("=".repeat(30));
     }
 
@@ -123,6 +126,51 @@ public class App {
         return book;
     }
 
+    private Object[] addNewStore(Scanner sc){
+        Object[] store = new Object[3];
+        System.out.println("Store name?");
+        store[0] = sc.nextLine();
+        System.out.println("Store address?");
+        store[1] = sc.nextLine();
+        System.out.println("Want to make the store active? y/n");
+        store[2] = sc.nextLine().toLowerCase();
+
+        return store;
+    }
+
+    private void addNewStoreMenu(Scanner sc){
+        Object[] store = addNewStore(sc);
+
+        controller.addNewStore(store);
+
+        System.out.println("Done!");
+    }
+
+    private void addBooksToStoreMenu(Scanner sc){
+        controller.printStoresWithId();
+        System.out.println("Which Store you want to add?\nPlease Write Store ID:");
+        int sid = sc.nextInt(); sc.nextLine();
+
+        if (controller.getStoreById(sid).equals("No such ID")){
+            System.out.println("No such ID!\n\nReturning to Add menu...");
+            return;
+        } else {
+            System.out.println(controller.getStoreById(sid));
+        }
+
+        System.out.println("How many book you want to add to the store?");
+        int amount = sc.nextInt(); sc.nextLine();
+        int[] bookIds = new int[amount];
+        controller.printBooksWithId();
+        System.out.println("Which books you want to add?\nPlease write Book ID-s");
+        for (int i = 0; i < bookIds.length; i++) {
+            bookIds[i] = Integer.parseInt(sc.nextLine());
+        }
+        controller.addBooksToStore(sid,bookIds);
+        System.out.println("Done!");
+
+    }
+
     //    --------------------------------------------------------------------
 
     private void removeMenu(Scanner sc){
@@ -134,8 +182,8 @@ public class App {
             switch (option) {
                 case "0" -> mainMenu(sc);
                 case "1" -> removeAuthorMenu(sc);
-//                case "2" ->
-//                case "3" ->
+                case "2" -> removeStoreMenu(sc);
+                case "3" -> removeBookFromStoreMenu(sc);
 //                case "4" ->
                 default -> System.out.println("Unknown option...");
             }
@@ -145,6 +193,8 @@ public class App {
         System.out.println("=".repeat(30));
         System.out.println("\t0 - Back to Main Menu...");
         System.out.println("\t1 - Remove Author");
+        System.out.println("\t2 - Remove Store");
+        System.out.println("\t3 - Remove Book from Store");
         System.out.println("=".repeat(30));
     }
 
@@ -169,6 +219,52 @@ public class App {
         }
     }
 
+    private void removeStoreMenu(Scanner sc){
+        controller.printStoresWithId();
+        System.out.println("\n\nWhich Store you want to remove?\nPlease write the Store ID:");
+        int sid = sc.nextInt(); sc.nextLine();
+
+        if (controller.getStoreById(sid).equals("No such ID")){
+            System.out.println("No such ID!\n\nReturning to remove menu...");
+            return;
+        } else {
+            System.out.println(controller.getStoreById(sid));
+        }
+
+        System.out.println("Are you sure you want to remove this Store? y/n");
+        String option = sc.nextLine().toLowerCase();
+
+        if (option.equals("y")){
+            controller.removeStore(sid);
+            System.out.println("Removed!");
+        }
+    }
+
+    private void removeBookFromStoreMenu(Scanner sc){
+        controller.printStoresWithId();
+        System.out.println("\n\nWhich Store you want to remove books from?\nPlease write the Store ID:");
+        int sid = sc.nextInt(); sc.nextLine();
+
+        if (controller.getStoreById(sid).equals("No such ID")){
+            System.out.println("No such ID!\n\nReturning to remove menu...");
+            return;
+        } else {
+            System.out.println(controller.getStoreById(sid));
+        }
+
+        System.out.println("How many book you want to remove from the store?");
+        int amount = sc.nextInt(); sc.nextLine();
+        int[] bookIds = new int[amount];
+        controller.printBooksWithId();
+        System.out.println("Which books you want to remove?\nPlease write Book ID-s");
+        for (int i = 0; i < bookIds.length; i++) {
+            bookIds[i] = Integer.parseInt(sc.nextLine());
+        }
+        controller.removeBooksFromStore(sid,bookIds);
+        System.out.println("Removed!");
+
+    }
+
     //    --------------------------------------------------------------------
 
     private void searchMenu(Scanner sc){
@@ -180,9 +276,10 @@ public class App {
             switch (option) {
                 case "0" -> mainMenu(sc);
                 case "1" -> searchBookMenu(sc);
-//                case "2" ->
-//                case "3" ->
-//                case "4" ->
+                case "2" -> searchAuthorMenu(sc);
+                case "3" -> searchStoreMenu(sc);
+                case "4" -> controller.print3StoreWithBooksBellow10();
+                case "5" -> controller.printStoreBookAmount();
                 default -> System.out.println("Unknown option...");
             }
         }
@@ -191,6 +288,11 @@ public class App {
     private void printSearchMenu(){
         System.out.println("=".repeat(30));
         System.out.println("\t0 - Back to Main Menu...");
+        System.out.println("\t1 - Search Book");
+        System.out.println("\t2 - Search Author");
+        System.out.println("\t3 - Search Store");
+        System.out.println("\t4 - Show Stores with low books");
+        System.out.println("\t5 - Show Stores with book amounts");
         System.out.println("=".repeat(30));
     }
 
@@ -214,7 +316,60 @@ public class App {
                 System.out.println("\nPlease write the Author ID:");
                 int aid = sc.nextInt(); sc.nextLine();
                 System.out.println(controller.getBookByAuthor(aid));
-            }
+            }default -> System.out.println("No such option\nReturning to search menu...");
+        }
+    }
+
+    private void searchAuthorMenu(Scanner sc){
+        System.out.println("What do you want to search by?" +
+                "\n\t1 - Name" +
+                "\n\t2 - Date of Birth" +
+                "\n\t3 - Gender");
+        int option = sc.nextInt(); sc.nextLine();
+        switch (option) {
+            case 1 -> {
+                System.out.println("Write Name:");
+                String name = sc.nextLine();
+                System.out.println(controller.getAuthorByName(name));
+            } case 2 -> {
+                System.out.println("Write Date of Birth, format: yyyy-mm-dd");
+                String dob = sc.nextLine();
+                System.out.println(controller.getAuthorByDob(dob));
+            } case 3 -> {
+                System.out.println("Write the Gender, m/f :");
+                String gender = sc.nextLine();
+                System.out.println(controller.getAuthorByGender(gender));
+            }default -> System.out.println("No such option\nReturning to search menu...");
+        }
+    }
+
+    private void searchStoreMenu(Scanner sc){
+        System.out.println("What do you want to search by?" +
+                "\n\t1 - Address" +
+                "\n\t2 - Owner" +
+                "\n\t3 - Book");
+        int option = sc.nextInt(); sc.nextLine();
+        switch (option) {
+            case 1 -> {
+                System.out.println("Write Address:");
+                String address = sc.nextLine();
+                System.out.println(controller.getStoreByAddress(address));
+            } case 2 -> {
+                System.out.println("Write Owner's name:");
+                String owner = sc.nextLine();
+                System.out.println(controller.getStoreByOwner(owner));
+            } case 3 -> {
+                controller.printBooksWithId();
+                System.out.println("\n\nWhich book you want to search by?\nPlease write the book ID:");
+                int bid = sc.nextInt(); sc.nextLine();
+
+                if (controller.getBookById(bid).equals("No such ID")){
+                    System.out.println("No such ID!\n\nReturning to search menu...");
+                    return;
+                } else {
+                    System.out.println(controller.getStoreByBookId(bid));
+                }
+            }default -> System.out.println("No such option\nReturning to search menu...");
         }
     }
 
@@ -230,8 +385,8 @@ public class App {
                 case "0" -> mainMenu(sc);
                 case "1" -> modifyBookMenu(sc);
                 case "2" -> modifyAuthorMenu(sc);
-//                case "3" ->
-//                case "4" ->
+                case "3" -> modifyActiveBookMenu(sc);
+                case "4" -> modifyStoreMenu(sc);
                 default -> System.out.println("Unknown option...");
             }
         }
@@ -241,7 +396,9 @@ public class App {
         System.out.println("=".repeat(30));
         System.out.println("\t0 - Back to Main Menu...");
         System.out.println("\t1 - Modify Book");
-        System.out.println("\t1 - Modify Author");
+        System.out.println("\t2 - Modify Author");
+        System.out.println("\t3 - Modify Book activeness");
+        System.out.println("\t4 - Modify Store");
         System.out.println("=".repeat(30));
     }
 
@@ -287,6 +444,38 @@ public class App {
         System.out.println("Done!");
     }
 
+    private void modifyActiveBookMenu(Scanner sc){
+        System.out.println("1 - Change ACTIVE book to Inactive" +
+                            "\n2 - Change INACTIVE book to Active");
+        int option = sc.nextInt(); sc.nextLine();
+        if (option == 1){
+            controller.printActiveBookWithId();
+        } else if (option == 2) {
+            controller.printInactiveBookWithId();
+        } else {
+            System.out.println("No such option.\n\nReturning to modify menu...");
+            return;
+        }
+
+        System.out.println("Please write Book ID:");
+        int bid = sc.nextInt(); sc.nextLine();
+
+        if (controller.getBookById(bid).equals("No such ID")){
+            System.out.println("No such ID!\n\nReturning to modify menu...");
+            return;
+        } else {
+            System.out.println(controller.getBookById(bid));
+        }
+        System.out.println("You sure you want to change the activeness? y/n");
+        String option2 = sc.nextLine().toLowerCase();
+
+        if (option2.equals("y")){
+            controller.modifyBookActiveness(bid);
+        }
+        System.out.println(controller.getBookById(bid));
+        System.out.println("Done!");
+    }
+
     private void modifyAuthorMenu(Scanner sc){
         controller.printAuthorsWithId();
         System.out.println("\n\nWhich Author you want to modify?\nPlease write the Author id:");
@@ -301,14 +490,40 @@ public class App {
         System.out.println("Please Write onto the correct place what do you want to modify\n" +
                 "if you dont want to change it, press enter.");
         Object[] author = new Object[3];
-        System.out.println("\n\t Name?");
+        System.out.println("\n\tAddress?");
         author[0] = sc.nextLine();
-        System.out.println("\n\tDate of Birth? format: yyyy-mm-dd");
+        System.out.println("\n\tOwner?");
         author[1] = sc.nextLine();
-        System.out.println("\n\tGender? male/female");
+        System.out.println("\n\tBookList?");
         author[2] = sc.nextLine();
 
         controller.modifyAuthor(aid,author);
+        System.out.println("Done!");
+
+    }
+
+    private void modifyStoreMenu(Scanner sc){
+        controller.printStoresWithId();
+        System.out.println("\n\nWhich Store you want to modify?\nPlease write the Store id:");
+        int sid = sc.nextInt(); sc.nextLine();
+
+        if (controller.getStoreById(sid).equals("No such ID")){
+            System.out.println("No such ID!\n\nReturning to modify menu...");
+            return;
+        } else {
+            System.out.println(controller.getStoreById(sid));
+        }
+        System.out.println("Please Write onto the correct place what do you want to modify\n" +
+                "if you dont want to change it, press enter." +
+                "\n\nto remove book, go to remove menu." +
+                "\nto add book, go to add menu.");
+        Object[] store = new Object[2];
+        System.out.println("\n\t Name?");
+        store[0] = sc.nextLine();
+        System.out.println("\n\tDate of Birth? format: yyyy-mm-dd");
+        store[1] = sc.nextLine();
+
+        controller.modifyStore(sid,store);
         System.out.println("Done!");
 
     }
@@ -322,6 +537,7 @@ public class App {
                 Scanner sc = new Scanner(System.in);
                 Controller c = new Controller()
         ) {
+            m.controller.print3StoreWithBooksBellow10();
             m.controller = c;
             m.mainMenu(sc);
         }
