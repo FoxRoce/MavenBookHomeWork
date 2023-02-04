@@ -51,9 +51,7 @@ public class Book {
         this.storeList = storeList;
     }
 
-
     //    ---------------------------------------------------------------------
-
 
     public int getId() {
         return id;
@@ -85,7 +83,6 @@ public class Book {
     public List<BookToStore> getStoreList() {
         return storeList;
     }
-
 
     //    ---------------------------------------------------------------------
 
@@ -133,7 +130,7 @@ public class Book {
                 ", edition=" + edition +
                 ", title='" + title + '\'' +
                 ", active=" + active +
-                ", author=" + author +
+                ", author=" + author.getName() +
                 ", storeList=" + storeList +
                 '}';
     }

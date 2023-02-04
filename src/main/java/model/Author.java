@@ -5,10 +5,6 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
-enum Gender {
-    male, female
-}
-
 @Entity
 @Table (name = "VN_Authors")
 public class Author {
@@ -90,11 +86,12 @@ public class Author {
 
     @Override
     public String toString() {
-        return "\n\tAuthor{" +
+        return "Author{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", dob=" + dob +
                 ", gender=" + gender +
+                ", bookList=" + bookList +
                 '}';
     }
 

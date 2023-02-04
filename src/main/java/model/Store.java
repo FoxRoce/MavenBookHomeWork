@@ -14,6 +14,9 @@ public class Store {
     private int id;
 
     @Column
+    private String name;
+
+    @Column
     private String address;
 
     @Column
@@ -26,26 +29,33 @@ public class Store {
     private List<BookToStore> bookList;
 
 
+
+
     //    ---------------------------------------------------------------------
     public Store(){}
 
-    public Store(int id, String address, String owner, boolean active, List<BookToStore> bookList) {
+    public Store(int id, String name, String address, String owner, List<BookToStore> bookList) {
         this.id = id;
+        this.name = name;
         this.address = address;
         this.owner = owner;
-        this.active = active;
         this.bookList = bookList;
     }
 
 
     //    ---------------------------------------------------------------------
+
     public int getId() {
         return id;
+    }
+    public String getName() {
+        return name;
     }
 
     public String getAddress() {
         return address;
     }
+
     public String getOwner() {
         return owner;
     }
@@ -59,11 +69,16 @@ public class Store {
     }
 
 
+
     //    ---------------------------------------------------------------------
 
     public void setId(int id) {
         this.id = id;
     }
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setAddress(String address) {
         this.address = address;
     }
@@ -86,9 +101,11 @@ public class Store {
     public String toString() {
         return "Store{" +
                 "id=" + id +
+                ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", owner='" + owner + '\'' +
                 ", active=" + active +
+                ", bookList=" + bookList +
                 '}';
     }
 

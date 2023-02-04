@@ -1,13 +1,12 @@
 package main;
 
 import model.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 import org.hibernate.query.SelectionQuery;
+
+import java.time.LocalDate;
+import java.util.Map;
 
 public class Controller implements AutoCloseable {
 
@@ -18,11 +17,576 @@ public class Controller implements AutoCloseable {
         model.close();
     }
 
-    public void createTables(){
+    public void createTables() {
         Session session = model.getSession();
-        Transaction t = session.beginTransaction();
+//        Transaction t = session.beginTransaction();
+//        session.getTransaction().commit();
+    }
+
+    public void printBooksWithId() {
+        Session session = model.getSession();
+        session.beginTransaction();
+
+        SelectionQuery<Book> query = session.createSelectionQuery("FROM Book", Book.class);
+
+        for (var thing : query.list()) {
+            System.out.println(thing.getId() + " - " + thing.getTitle());
+        }
         session.getTransaction().commit();
     }
+
+    public void printAuthorsWithId() {
+        Session session = model.getSession();
+        session.beginTransaction();
+
+        SelectionQuery<Author> query = session.createSelectionQuery("FROM Author", Author.class);
+
+        for (var thing : query.list()) {
+            System.out.println(thing.getId() + " - " + thing.getName());
+        }
+        session.getTransaction().commit();
+    }
+
+    public void printStoresWithId() {
+        Session session = model.getSession();
+        session.beginTransaction();
+
+        SelectionQuery<Store> query = session.createSelectionQuery("FROM Store", Store.class);
+
+        for (var thing : query.list()) {
+            System.out.println(thing.getId() + " - " + thing.getName() + ", " + thing.getAddress());
+        }
+        session.getTransaction().commit();
+    }
+
+    public String getBookById(int id) {
+        Session session = model.getSession();
+        session.beginTransaction();
+
+        Book book;
+        try {
+            book = session.find(Book.class, id);
+        } catch (Exception e) {
+            return "No such ID";
+        }
+        return book.toString();
+    }
+
+    public String getAuthorById(int id) {
+        Session session = model.getSession();
+        session.beginTransaction();
+
+        Author author;
+        try {
+            author = session.find(Author.class, id);
+        } catch (Exception e) {
+            return "No such ID";
+        }
+        return author.toString();
+    }
+
+    public String getStoreById(int id) {
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+
+        Store store;
+        try {
+            store = session.find(Store.class, id);
+        } catch (Exception e) {
+            return "No such ID";
+        }
+        return store.toString();
+    }
+
+    public void addNewBook(Object[] newBook) {
+        Book book = new Book();
+        book.setTitle((String) newBook[0]);
+        book.setIsbn((String) newBook[1]);
+        book.setEdition((Integer) newBook[2]);
+
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+
+        try {
+            book.setDob(LocalDate.parse((String) newBook[3]));
+        } catch (Exception e) {
+            System.out.println("Wrong date format\nBook Date of Publish not added");
+        }
+
+        if (!(newBook[4] instanceof Integer)) {
+            Author author = addNewAuthor(new Object[]{newBook[4]});
+            session.merge(author);
+            book.setAuthor(author);
+        } else {
+            try {
+                int aid = (Integer) newBook[4];
+                book.setAuthor(session.find(Author.class, aid));
+            } catch (Exception e) {
+                System.out.println("No such ID for Author\nBook Author not added");
+            }
+        }
+
+        if (newBook[5] instanceof Integer) {
+            try {
+                int sid = (Integer) newBook[5];
+                Store store = session.find(Store.class, sid);
+                book.getStoreList().add(new BookToStore(book, store, (Integer) newBook[6]));
+            } catch (Exception e) {
+                System.out.println("No such ID for Store\nBook Store not added");
+            }
+        }
+        session.persist(book);
+        t.commit();
+    }
+
+    public Author addNewAuthor(Object[] newAuthor) {
+        Author author = new Author();
+        author.setName((String) newAuthor[0]);
+        try {
+            author.setDob(LocalDate.parse((String) newAuthor[1]));
+        } catch (Exception e) {
+            System.out.println("Wrong date format\nAuthor Date of Birth not added");
+        }
+        try {
+            author.setGender((Gender) newAuthor[2]);
+        } catch (Exception e) {
+            System.out.println("Wrong gender format\nAuthor Gender not added");
+        }
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+        session.persist(author);
+        t.commit();
+        return author;
+    }
+
+    public void addNewStore(Object[] newStore) {
+        Store store = new Store();
+        store.setName((String) newStore[0]);
+        store.setAddress((String) newStore[1]);
+        store.setOwner((String) newStore[2]);
+
+        if (newStore[3].equals("y")) {
+            store.setActive(true);
+        }
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+        session.persist(store);
+        t.commit();
+    }
+
+    public void addBooksToStore(int sid, Map<Integer, Integer> bookList) {
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+        Store store;
+        try {
+            store = session.find(Store.class, sid);
+        } catch (Exception e) {
+            System.out.println("No such Store ID\nNo Books added");
+            return;
+        }
+
+        for (int bookID : bookList.keySet()) {
+            try {
+                Book book = session.find(Book.class, bookID);
+                store.getBookList().add(new BookToStore(book, store, bookList.get(bookID)));
+            } catch (Exception e) {
+                System.out.println("Book ID: " + bookID + ", does not exist. Not added");
+            }
+        }
+    }
+
+    public void removeAuthor(int id) {
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+
+        Author author;
+        try {
+            author = session.find(Author.class, id);
+        } catch (Exception e) {
+            System.out.println("No such ID\nAuthor not removed");
+            return;
+        }
+        session.remove(author);
+        t.commit();
+    }
+
+    public void removeStore(int id) {
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+
+        Store store;
+        try {
+            store = session.find(Store.class, id);
+        } catch (Exception e) {
+            System.out.println("No such ID\nStore not removed");
+            return;
+        }
+        session.remove(store);
+        t.commit();
+    }
+
+    public void removeBooksFromStore(int sid, int[] bookIds) {
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+
+        Store store;
+        try {
+            store = session.find(Store.class, sid);
+        } catch (Exception e) {
+            System.out.println("No such ID\nStore not modified");
+            return;
+        }
+
+        for (int bookId : bookIds) {
+            try {
+                session.find(Book.class, bookId);
+
+                String line = "Delete From ? where store_sid =? and book_bid =?";
+                SelectionQuery<?> query = session.createSelectionQuery(line);
+                query.setParameter(1, BookToStore.class);
+                query.setParameter(2, sid);
+                query.setParameter(3, bookId);
+
+                t.commit();
+            } catch (Exception e) {
+                System.out.println("No such Book ID\nBook not removed from store");
+            }
+        }
+    }
+
+    public void printStoreBookAmount() {
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+
+        SelectionQuery<BookToStore> query = session.createSelectionQuery("FROM BookToStore", BookToStore.class);
+
+        for (var thing : query.list()) {
+            System.out.println(thing.getStore().getName() + " - " + thing.getBook().getTitle() + " Amount: " + thing.getAmount());
+        }
+        session.getTransaction().commit();
+    }
+
+    public void print3StoreWithBooksBellow10(){
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+
+        SelectionQuery<BookToStore> query = session.createSelectionQuery("FROM BookToStore order by amount limit 3", BookToStore.class);
+
+        for (var thing : query.list()) {
+            System.out.println(thing.getStore().getName() + " - " + thing.getBook().getTitle() + " Amount: " + thing.getAmount());
+        }
+        session.getTransaction().commit();
+    }
+
+    public String getBookByISBN(String isbn) {
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+
+        SelectionQuery<Book> query = session.createSelectionQuery("FROM Book where isbn =?", Book.class);
+        query.setParameter(1,isbn);
+        session.getTransaction().commit();
+
+        Book book = (Book) query;
+
+        return book.toString();
+    }
+
+
+    public String getBookByTittle(String title) {
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+
+        SelectionQuery<Book> query = session.createSelectionQuery("FROM Book where title = ?", Book.class);
+        query.setParameter(1,title);
+        session.getTransaction().commit();
+
+        Book book = (Book) query;
+
+        return book.toString();
+    }
+
+    public String getBookByAuthor(int aid) {
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+
+        try {
+            session.find(Author.class,aid);
+        } catch (Exception e){
+            return "No such Author ID\nReturning to search menu...";
+        }
+
+        SelectionQuery<Book> query = session.createSelectionQuery("FROM Book where author_aid = ?", Book.class);
+        query.setParameter(1,aid);
+        session.getTransaction().commit();
+
+        String temp = null;
+        for (Book book : query.list()) {
+            temp += book.toString() + "\n";
+        }
+        return temp;
+    }
+
+    public String getAuthorByName(String name) {
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+
+        SelectionQuery<Author> query = session.createSelectionQuery("FROM ? where name like %?%", Author.class);
+        query.setParameter(1,Author.class);
+        query.setParameter(2,name);
+        session.getTransaction().commit();
+
+        String temp = null;
+        for (Author author : query.list()) {
+            temp += author.toString() + "\n";
+        }
+        return temp;
+    }
+
+    public String getAuthorByDob(String dob) {
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+
+        SelectionQuery<Author> query = session.createSelectionQuery("FROM ? where dob like %?%", Author.class);
+        query.setParameter(1,Author.class);
+        query.setParameter(2,dob);
+        session.getTransaction().commit();
+
+        String temp = null;
+        for (Author author : query.list()) {
+            temp += author.toString() + "\n";
+        }
+        return temp;
+    }
+
+    public String getAuthorByGender(String gender) {
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+
+        SelectionQuery<Author> query = session.createSelectionQuery("FROM ? where gender = ?", Author.class);
+        query.setParameter(1,Author.class);
+        query.setParameter(2,gender);
+        session.getTransaction().commit();
+
+        String temp = null;
+        for (Author author : query.list()) {
+            temp += author.toString() + "\n";
+        }
+        return temp;
+    }
+
+    public String getStoreByAddress(String address) {
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+
+        SelectionQuery<Store> query = session.createSelectionQuery("FROM ? where address like %?%", Store.class);
+        query.setParameter(1,Store.class);
+        query.setParameter(2,address);
+        session.getTransaction().commit();
+
+        String temp = null;
+        for (Store store : query.list()) {
+            temp += store.toString() + "\n";
+        }
+        return temp;
+    }
+
+    public String getStoreByOwner(String owner) {
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+
+        SelectionQuery<Store> query = session.createSelectionQuery("FROM ? where owner like %?%", Store.class);
+        query.setParameter(1,Store.class);
+        query.setParameter(2,owner);
+        session.getTransaction().commit();
+
+        String temp = null;
+        for (Store store : query.list()) {
+            temp += store.toString() + "\n";
+        }
+        return temp;
+    }
+
+    public String getStoreByBookId(int bid) {
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+
+        SelectionQuery<BookToStore> query = session.createSelectionQuery("FROM ? where book_bid = ?", BookToStore.class);
+        query.setParameter(1,BookToStore.class);
+        query.setParameter(2,bid);
+        session.getTransaction().commit();
+
+        String temp = null;
+        for (BookToStore bookToStore : query.list()) {
+            temp += bookToStore.toString() + "\n";
+        }
+        return temp;
+    }
+
+    public void modifyBook(int bid, Object[] modifiedBook) {
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+
+        Book book = session.find(Book.class,bid);
+
+        if ( !(modifiedBook[0] == null)){
+            book.setIsbn((String) modifiedBook[0]);
+        }
+
+        try {
+            if ( !(modifiedBook[1] == null)){
+                book.setDob(LocalDate.parse((String) modifiedBook[1]));
+            }
+        } catch (Exception e){
+            System.out.println("Wrong Date format\nBook Date of publish did not changed");
+        }
+
+        if ( !(modifiedBook[2] == null)){
+            book.setEdition((Integer) modifiedBook[2]);
+        }
+
+        if ( !(modifiedBook[3] == null)){
+            book.setTitle((String) modifiedBook[3]);
+        }
+
+        if ( !(modifiedBook[4] == null)){
+            if(modifiedBook[4] instanceof Integer){
+                try {
+                    book.setAuthor(session.find(Author.class,(Integer) modifiedBook[4]));
+                } catch (Exception e){
+                    System.out.println("No Such Author ID\nBook Author wasn't modified");
+                }
+
+            } else {
+                Author author = addNewAuthor(new Object[]{modifiedBook[4]});
+                session.merge(author);
+                book.setAuthor(author);
+            }
+        }
+        session.persist(book);
+        t.commit();
+    }
+
+    public void printActiveBookWithId() {
+        Session session = model.getSession();
+        session.beginTransaction();
+
+        SelectionQuery<Book> query = session.createSelectionQuery("FROM VN_Books where active = 'true'", Book.class);
+
+        for (var thing : query.list()) {
+            System.out.println(thing.getId() + " - " + thing.getTitle() + " - Active: " + thing.isActive());
+        }
+        session.getTransaction().commit();
+    }
+
+    public void printInactiveBookWithId() {
+        Session session = model.getSession();
+        session.beginTransaction();
+
+        SelectionQuery<Book> query = session.createSelectionQuery("FROM VN_Books where active = 'false'", Book.class);
+
+        for (var thing : query.list()) {
+            System.out.println(thing.getId() + " - " + thing.getTitle() + " - Active: " + thing.isActive());
+        }
+        session.getTransaction().commit();
+    }
+
+    public void modifyBookActiveness(int bid) {
+        Session session = model.getSession();
+        session.beginTransaction();
+
+        Book book = session.find(Book.class,bid);
+
+        book.setActive(!book.isActive());
+
+        session.getTransaction().commit();
+    }
+
+    public void modifyAuthor(int aid, Object[] modifiedAuthor) {
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+
+        Author author = session.find(Author.class,aid);
+
+        if ( !(modifiedAuthor[0] == null)){
+            author.setName((String) modifiedAuthor[0]);
+        }
+
+        try {
+            if ( !(modifiedAuthor[1] == null)){
+                author.setDob(LocalDate.parse((String) modifiedAuthor[1]));
+            }
+        } catch (Exception e){
+            System.out.println("Wrong Date format\nAuthor Date of Birth did not changed");
+        }
+
+        if ( !(modifiedAuthor[2] == null)) {
+            try {
+                author.setGender((Gender) modifiedAuthor[2]);
+            } catch (Exception e) {
+                System.out.println("Wrong gender format\nAuthor Gender did not changed");
+            }
+        }
+        session.persist(author);
+        t.commit();
+    }
+
+    public void modifyStore(int sid, Object[] modifiedStore) {
+        Session session = model.getSession();
+        Transaction t = session.beginTransaction();
+
+        Store store = session.find(Store.class,sid);
+
+        if ( !(modifiedStore[0] == null)){
+            store.setName((String) modifiedStore[0]);
+        }
+
+        if ( !(modifiedStore[1] == null)){
+            store.setAddress((String) modifiedStore[1]);
+        }
+
+        if ( !(modifiedStore[2] == null)){
+            store.setOwner((String) modifiedStore[2]);
+        }
+
+        session.persist(store);
+        t.commit();
+    }
+
+    public void printActiveStoreWithId() {
+        Session session = model.getSession();
+        session.beginTransaction();
+
+        SelectionQuery<Store> query = session.createSelectionQuery("FROM VN_Stores where active = 'true'", Store.class);
+
+        for (var thing : query.list()) {
+            System.out.println(thing.getId() + " - " + thing.getName() + " - Active: " + thing.isActive());
+        }
+        session.getTransaction().commit();
+    }
+
+    public void printInactiveStoreWithId() {
+        Session session = model.getSession();
+        session.beginTransaction();
+
+        SelectionQuery<Store> query = session.createSelectionQuery("FROM VN_Stores where active = 'false'", Store.class);
+
+        for (var thing : query.list()) {
+            System.out.println(thing.getId() + " - " + thing.getName() + " - Active: " + thing.isActive());
+        }
+        session.getTransaction().commit();
+    }
+
+    public void modifyStoreActiveness(int sid) {
+        Session session = model.getSession();
+        session.beginTransaction();
+
+        Store store = session.find(Store.class,sid);
+
+        store.setActive(!store.isActive());
+
+        session.getTransaction().commit();
+    }
+}
 /*
     public void initStudentsAndCourses() {
         Session s = model.getSession();
@@ -203,4 +767,3 @@ public class Controller implements AutoCloseable {
         }
     }
 */
-}

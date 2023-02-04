@@ -1,6 +1,7 @@
 package main;
 
-import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class App {
@@ -70,7 +71,7 @@ public class App {
     private void addBookMenu(Scanner sc) {
         System.out.println("Do you want to add a new author? y/n");
         String author = sc.nextLine().toLowerCase();
-        System.out.println("Do you want to add it to a store? y/n");
+        System.out.println("Do you want to add it to an existing store? y/n");
         String store = sc.nextLine().toLowerCase();
 
         Object[] book = addNewBook(sc, author, store);
@@ -85,7 +86,7 @@ public class App {
         System.out.println("Author name?");
         author[0] = sc.nextLine();
         System.out.println("Author Dade of Birth? format: yyyy-mm-dd");
-        author[1] = LocalDate.parse(sc.nextLine());
+        author[1] = sc.nextLine();
         System.out.println("Author Gender? male/female");
         author[2] = sc.nextLine();
 
@@ -99,7 +100,7 @@ public class App {
     }
 
     private Object[] addNewBook(Scanner sc, String author,String store){
-        Object[] book = new Object[6];
+        Object[] book = new Object[7];
         System.out.println("Book Title?");
         book[0] = sc.nextLine();
         System.out.println("Book ISBN?");
@@ -107,7 +108,7 @@ public class App {
         System.out.println("Book Edition?");
         book[2] = sc.nextInt(); sc.nextLine();
         System.out.println("Book publish date? format: yyyy-mm-dd");
-        book[3] = LocalDate.parse(sc.nextLine());
+        book[3] = sc.nextLine();
 
         if (author.equals("n")){
             controller.printAuthorsWithId();
@@ -118,22 +119,26 @@ public class App {
         }
 
         if (store.equals("y")){
-            controller.printStoreWithId();
+            controller.printStoresWithId();
             System.out.println("Store ID?");
             book[5] = sc.nextInt(); sc.nextLine();
+            System.out.println("Amount of Book to send to the Store?");
+            book[6] = sc.nextInt(); sc.nextLine();
         }
 
         return book;
     }
 
     private Object[] addNewStore(Scanner sc){
-        Object[] store = new Object[3];
+        Object[] store = new Object[4];
         System.out.println("Store name?");
         store[0] = sc.nextLine();
         System.out.println("Store address?");
         store[1] = sc.nextLine();
+        System.out.println("Store Owner?");
+        store[2] = sc.nextLine();
         System.out.println("Want to make the store active? y/n");
-        store[2] = sc.nextLine().toLowerCase();
+        store[3] = sc.nextLine().toLowerCase();
 
         return store;
     }
@@ -160,11 +165,14 @@ public class App {
 
         System.out.println("How many book you want to add to the store?");
         int amount = sc.nextInt(); sc.nextLine();
-        int[] bookIds = new int[amount];
+        Map<Integer,Integer> bookIds = new HashMap<>();
         controller.printBooksWithId();
         System.out.println("Which books you want to add?\nPlease write Book ID-s");
-        for (int i = 0; i < bookIds.length; i++) {
-            bookIds[i] = Integer.parseInt(sc.nextLine());
+        for (int i = 0; i < amount; i++) {
+            int bid = Integer.parseInt(sc.nextLine());
+            System.out.println("Amount to send: ");
+            int bidAmount = Integer.parseInt(sc.nextLine());
+            bookIds.put(bid,bidAmount);
         }
         controller.addBooksToStore(sid,bookIds);
         System.out.println("Done!");
@@ -387,6 +395,7 @@ public class App {
                 case "2" -> modifyAuthorMenu(sc);
                 case "3" -> modifyActiveBookMenu(sc);
                 case "4" -> modifyStoreMenu(sc);
+                case "5" -> modifyActiveStoreMenu(sc);
                 default -> System.out.println("Unknown option...");
             }
         }
@@ -399,6 +408,7 @@ public class App {
         System.out.println("\t2 - Modify Author");
         System.out.println("\t3 - Modify Book activeness");
         System.out.println("\t4 - Modify Store");
+        System.out.println("\t5 - Modify Store activeness");
         System.out.println("=".repeat(30));
     }
 
@@ -476,6 +486,38 @@ public class App {
         System.out.println("Done!");
     }
 
+    private void modifyActiveStoreMenu(Scanner sc){
+        System.out.println("1 - Change ACTIVE Store to Inactive" +
+                "\n2 - Change INACTIVE Store to Active");
+        int option = sc.nextInt(); sc.nextLine();
+        if (option == 1){
+            controller.printActiveStoreWithId();
+        } else if (option == 2) {
+            controller.printInactiveStoreWithId();
+        } else {
+            System.out.println("No such option.\n\nReturning to modify menu...");
+            return;
+        }
+
+        System.out.println("Please write Store ID:");
+        int bid = sc.nextInt(); sc.nextLine();
+
+        if (controller.getStoreById(bid).equals("No such ID")){
+            System.out.println("No such ID!\n\nReturning to modify menu...");
+            return;
+        } else {
+            System.out.println(controller.getStoreById(bid));
+        }
+        System.out.println("You sure you want to change the activeness? y/n");
+        String option2 = sc.nextLine().toLowerCase();
+
+        if (option2.equals("y")){
+            controller.modifyStoreActiveness(bid);
+        }
+        System.out.println(controller.getStoreById(bid));
+        System.out.println("Done!");
+    }
+
     private void modifyAuthorMenu(Scanner sc){
         controller.printAuthorsWithId();
         System.out.println("\n\nWhich Author you want to modify?\nPlease write the Author id:");
@@ -490,11 +532,11 @@ public class App {
         System.out.println("Please Write onto the correct place what do you want to modify\n" +
                 "if you dont want to change it, press enter.");
         Object[] author = new Object[3];
-        System.out.println("\n\tAddress?");
+        System.out.println("\n\t Name?");
         author[0] = sc.nextLine();
-        System.out.println("\n\tOwner?");
+        System.out.println("\n\tDate of Birth? format: yyyy-mm-dd");
         author[1] = sc.nextLine();
-        System.out.println("\n\tBookList?");
+        System.out.println("\n\tGender? male/female");
         author[2] = sc.nextLine();
 
         controller.modifyAuthor(aid,author);
@@ -517,11 +559,13 @@ public class App {
                 "if you dont want to change it, press enter." +
                 "\n\nto remove book, go to remove menu." +
                 "\nto add book, go to add menu.");
-        Object[] store = new Object[2];
-        System.out.println("\n\t Name?");
+        Object[] store = new Object[3];
+        System.out.println("\n\tName?");
         store[0] = sc.nextLine();
-        System.out.println("\n\tDate of Birth? format: yyyy-mm-dd");
+        System.out.println("\n\tAddress?");
         store[1] = sc.nextLine();
+        System.out.println("\n\tOwner?");
+        store[2] = sc.nextLine();
 
         controller.modifyStore(sid,store);
         System.out.println("Done!");
@@ -537,7 +581,7 @@ public class App {
                 Scanner sc = new Scanner(System.in);
                 Controller c = new Controller()
         ) {
-            m.controller.print3StoreWithBooksBellow10();
+//            m.controller.print3StoreWithBooksBellow10();
             m.controller = c;
             m.mainMenu(sc);
         }
