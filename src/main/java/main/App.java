@@ -288,6 +288,11 @@ public class App {
                 case "3" -> searchStoreMenu(sc);
                 case "4" -> controller.print3StoreWithBooksBellow10();
                 case "5" -> controller.printStoreBookAmount();
+                case "6" -> controller.printStores();
+                case "7" -> controller.printAllStores();
+                case "8" -> controller.printAuthors();
+                case "9" -> controller.printBooks();
+                case "10" -> controller.printAllBooks();
                 default -> System.out.println("Unknown option...");
             }
         }
@@ -301,6 +306,11 @@ public class App {
         System.out.println("\t3 - Search Store");
         System.out.println("\t4 - Show Stores with low books");
         System.out.println("\t5 - Show Stores with book amounts");
+        System.out.println("\t6 - Show Stores");
+        System.out.println("\t7 - Show ALL Stores");
+        System.out.println("\t8 - Show Authors");
+        System.out.println("\t9 - Show Books");
+        System.out.println("\t10 - Show All Books");
         System.out.println("=".repeat(30));
     }
 
