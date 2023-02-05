@@ -286,7 +286,7 @@ public class Controller implements AutoCloseable {
         query.setParameter(1,isbn);
         session.getTransaction().commit();
 
-        String temp = null;
+        String temp = "";
         for (Book book : query.list()) {
             temp += book.toString() + "\n";
         }
@@ -302,7 +302,7 @@ public class Controller implements AutoCloseable {
         query.setParameter(1,title);
         session.getTransaction().commit();
 
-        String temp = null;
+        String temp = "";
         for (Book book : query.list()) {
             temp += book.toString() + "\n";
         }
@@ -323,7 +323,7 @@ public class Controller implements AutoCloseable {
         query.setParameter(1,aid);
         session.getTransaction().commit();
 
-        String temp = null;
+        String temp = "";
         for (Book book : query.list()) {
             temp += book.toString() + "\n";
         }
@@ -338,7 +338,7 @@ public class Controller implements AutoCloseable {
         query.setParameter(1,name);
         session.getTransaction().commit();
 
-        String temp = null;
+        String temp = "";
         for (Author author : query.list()) {
             temp += author.toString() + "\n";
         }
@@ -354,7 +354,7 @@ public class Controller implements AutoCloseable {
         query.setParameter(2,dob);
         session.getTransaction().commit();
 
-        String temp = null;
+        String temp = "";
         for (Author author : query.list()) {
             temp += author.toString() + "\n";
         }
@@ -370,7 +370,7 @@ public class Controller implements AutoCloseable {
         query.setParameter(2,gender);
         session.getTransaction().commit();
 
-        String temp = null;
+        String temp = "";
         for (Author author : query.list()) {
             temp += author.toString() + "\n";
         }
@@ -386,7 +386,7 @@ public class Controller implements AutoCloseable {
         query.setParameter(2,address);
         session.getTransaction().commit();
 
-        String temp = null;
+        String temp = "";
         for (Store store : query.list()) {
             temp += store.toString() + "\n";
         }
@@ -402,7 +402,7 @@ public class Controller implements AutoCloseable {
         query.setParameter(2,owner);
         session.getTransaction().commit();
 
-        String temp = null;
+        String temp = "";
         for (Store store : query.list()) {
             temp += store.toString() + "\n";
         }
@@ -418,7 +418,7 @@ public class Controller implements AutoCloseable {
         query.setParameter(2,bid);
         session.getTransaction().commit();
 
-        String temp = null;
+        String temp = "";
         for (BookToStore bookToStore : query.list()) {
             temp += bookToStore.toString() + "\n";
         }
