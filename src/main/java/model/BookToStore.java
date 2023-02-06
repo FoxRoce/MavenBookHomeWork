@@ -14,6 +14,17 @@ public class BookToStore {
     @ManyToOne
     private Store store;
 
+//    @EmbeddedId
+//    private BookToStore id;
+//
+//    @ManyToOne
+//    @MapsId ("book_bid")
+//    private Book book;
+//
+//    @ManyToOne
+//    @MapsId("store_sid")
+//    private Store store;
+
     @Column
     private int amount;
 
@@ -60,8 +71,8 @@ public class BookToStore {
     @Override
     public String toString() {
         return "BookToStore{" +
-                "book=" + book +
-                ", store=" + store +
+                "book=" + book.getTitle() +
+                ", store=" + store.getName() + ", " + store.getAddress() +
                 ", amount=" + amount +
                 '}';
     }

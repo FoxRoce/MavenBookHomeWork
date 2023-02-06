@@ -35,6 +35,14 @@ public class Book {
     @OneToMany(mappedBy = "book")
     private List<BookToStore> storeList;
 
+//    @ManyToMany
+//    @JoinTable(
+//            name = "VN_Books_TO_VN_Stores",
+//            joinColumns = @JoinColumn(name = "book_bid"),
+//            inverseJoinColumns = @JoinColumn(name = "store_sid")
+//    )
+//    private List<BookToStore> storeList;
+
 
     //    ---------------------------------------------------------------------
 
@@ -123,7 +131,7 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{" +
+        String text = "Book{" +
                 "id=" + id +
                 ", isbn='" + isbn + '\'' +
                 ", dob=" + dob +
@@ -131,8 +139,12 @@ public class Book {
                 ", title='" + title + '\'' +
                 ", active=" + active +
                 ", author=" + author.getName() +
-                ", storeList=" + storeList +
-                '}';
+                ", storeList= ";
+
+        for (var store : storeList) {
+            text += store.getStore().getName() + ", " + store.getStore().getAddress()+"\n";
+        }
+        return text;
     }
 
     //    ---------------------------------------------------------------------

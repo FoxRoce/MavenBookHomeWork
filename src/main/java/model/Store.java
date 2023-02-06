@@ -28,6 +28,9 @@ public class Store {
     @OneToMany(mappedBy = "store")
     private List<BookToStore> bookList;
 
+//    @ManyToMany(mappedBy = "storeList")
+//    private List<BookToStore> bookList;
+
 
 
 

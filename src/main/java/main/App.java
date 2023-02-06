@@ -46,8 +46,8 @@ public class App {
             String option = sc.nextLine().toLowerCase();
 
             switch (option) {
-                case "0" -> mainMenu(sc);
-                case "1" -> controller.createTables();
+                case "0" -> {return;}
+                case "1" -> controller.createSession();
                 case "2" -> addBookMenu(sc);
                 case "3" -> addNewAuthorMenu(sc);
                 case "4" -> addNewStoreMenu(sc);
@@ -60,7 +60,7 @@ public class App {
     private void printAddMenu(){
         System.out.println("=".repeat(30));
         System.out.println("\t0 - Back to Main Menu...");
-        System.out.println("\t1 - Create Tables");
+        System.out.println("\t1 - Create Session");
         System.out.println("\t2 - Add New Book");
         System.out.println("\t3 - Add New Author");
         System.out.println("\t4 - Add New Store");
@@ -188,7 +188,7 @@ public class App {
             String option = sc.nextLine().toLowerCase();
 
             switch (option) {
-                case "0" -> mainMenu(sc);
+                case "0" -> {return;}
                 case "1" -> removeAuthorMenu(sc);
                 case "2" -> removeStoreMenu(sc);
                 case "3" -> removeBookFromStoreMenu(sc);
@@ -282,7 +282,7 @@ public class App {
             String option = sc.nextLine().toLowerCase();
 
             switch (option) {
-                case "0" -> mainMenu(sc);
+                case "0" -> {return;}
                 case "1" -> searchBookMenu(sc);
                 case "2" -> searchAuthorMenu(sc);
                 case "3" -> searchStoreMenu(sc);
@@ -400,7 +400,7 @@ public class App {
             String option = sc.nextLine().toLowerCase();
 
             switch (option) {
-                case "0" -> mainMenu(sc);
+                case "0" -> {return;}
                 case "1" -> modifyBookMenu(sc);
                 case "2" -> modifyAuthorMenu(sc);
                 case "3" -> modifyActiveBookMenu(sc);

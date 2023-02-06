@@ -2,7 +2,6 @@ package main;
 
 import model.*;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.query.SelectionQuery;
 
 import java.time.LocalDate;
@@ -17,8 +16,10 @@ public class Controller implements AutoCloseable {
         model.close();
     }
 
-    public void createTables() {
+    public void createSession() {
         Session session = model.getSession();
+        session.close();
+
 //        Transaction t = session.beginTransaction();
 //        session.getTransaction().commit();
     }
@@ -33,6 +34,7 @@ public class Controller implements AutoCloseable {
             System.out.println(thing.getId() + " - " + thing.getTitle());
         }
         session.getTransaction().commit();
+        session.close();
     }
 
     public void printAuthorsWithId() {
@@ -45,6 +47,7 @@ public class Controller implements AutoCloseable {
             System.out.println(thing.getId() + " - " + thing.getName());
         }
         session.getTransaction().commit();
+        session.close();
     }
 
     public void printStoresWithId() {
@@ -57,45 +60,49 @@ public class Controller implements AutoCloseable {
             System.out.println(thing.getId() + " - " + thing.getName() + ", " + thing.getAddress());
         }
         session.getTransaction().commit();
+        session.close();
     }
 
     public String getBookById(int id) {
         Session session = model.getSession();
-        session.beginTransaction();
 
-        Book book;
-        try {
-            book = session.find(Book.class, id);
-        } catch (Exception e) {
+        session.beginTransaction();
+        Book book = session.find(Book.class, id);
+        session.close();
+
+        if (book == null) {
             return "No such ID";
+        } else {
+            return book.toString();
         }
-        return book.toString();
     }
 
     public String getAuthorById(int id) {
         Session session = model.getSession();
-        session.beginTransaction();
 
-        Author author;
-        try {
-            author = session.find(Author.class, id);
-        } catch (Exception e) {
+        session.beginTransaction();
+        Author author = session.find(Author.class, id);
+        session.close();
+
+        if (author == null) {
             return "No such ID";
+        } else {
+            return author.toString();
         }
-        return author.toString();
     }
 
     public String getStoreById(int id) {
         Session session = model.getSession();
-        session.beginTransaction();
 
-        Store store;
-        try {
-            store = session.find(Store.class, id);
-        } catch (Exception e) {
+        session.beginTransaction();
+        Store store = session.find(Store.class, id);
+        session.close();
+
+        if (store == null) {
             return "No such ID";
+        } else {
+            return store.toString();
         }
-        return store.toString();
     }
 
     public void addNewBook(Object[] newBook) {
@@ -137,6 +144,7 @@ public class Controller implements AutoCloseable {
         }
         session.persist(book);
         session.getTransaction().commit();
+        session.close();
     }
 
     public Author addNewAuthor(Object[] newAuthor) {
@@ -156,6 +164,7 @@ public class Controller implements AutoCloseable {
         session.beginTransaction();
         session.persist(author);
         session.getTransaction().commit();
+        session.close();
         return author;
     }
 
@@ -172,6 +181,7 @@ public class Controller implements AutoCloseable {
         session.beginTransaction();
         session.persist(store);
         session.getTransaction().commit();
+        session.close();
     }
 
     public void addBooksToStore(int sid, Map<Integer, Integer> bookList) {
@@ -193,6 +203,7 @@ public class Controller implements AutoCloseable {
                 System.out.println("Book ID: " + bookID + ", does not exist. Not added");
             }
         }
+        session.close();
     }
 
     public void removeAuthor(int id) {
@@ -208,6 +219,7 @@ public class Controller implements AutoCloseable {
         }
         session.remove(author);
         session.getTransaction().commit();
+        session.close();
     }
 
     public void removeStore(int id) {
@@ -223,6 +235,7 @@ public class Controller implements AutoCloseable {
         }
         session.remove(store);
         session.getTransaction().commit();
+        session.close();
     }
 
     public void removeBooksFromStore(int sid, int[] bookIds) {
@@ -241,17 +254,17 @@ public class Controller implements AutoCloseable {
             try {
                 session.find(Book.class, bookId);
 
-                String line = "Delete From ? where store_sid =? and book_bid =?";
+                String line = "Delete From BookToStore where store_sid =?1 and book_bid =?2";
                 SelectionQuery<?> query = session.createSelectionQuery(line);
-                query.setParameter(1, BookToStore.class);
-                query.setParameter(2, sid);
-                query.setParameter(3, bookId);
+                query.setParameter(1, sid);
+                query.setParameter(2, bookId);
 
                 session.getTransaction().commit();
             } catch (Exception e) {
                 System.out.println("No such Book ID\nBook not removed from store");
             }
         }
+        session.close();
     }
 
     public void printStoreBookAmount() {
@@ -259,11 +272,12 @@ public class Controller implements AutoCloseable {
         session.beginTransaction();
 
         SelectionQuery<BookToStore> query = session.createSelectionQuery("FROM BookToStore", BookToStore.class);
+        session.getTransaction().commit();
+        session.close();
 
         for (var thing : query.list()) {
             System.out.println(thing.getStore().getName() + " - " + thing.getBook().getTitle() + " Amount: " + thing.getAmount());
         }
-        session.getTransaction().commit();
     }
 
     public void print3StoreWithBooksBellow10(){
@@ -271,11 +285,12 @@ public class Controller implements AutoCloseable {
         session.beginTransaction();
 
         SelectionQuery<BookToStore> query = session.createSelectionQuery("FROM BookToStore order by amount limit 3", BookToStore.class);
+        session.getTransaction().commit();
+        session.close();
 
         for (var thing : query.list()) {
             System.out.println(thing.getStore().getName() + " - " + thing.getBook().getTitle() + " Amount: " + thing.getAmount());
         }
-        session.getTransaction().commit();
     }
 
     public String getBookByISBN(String isbn) {
@@ -285,6 +300,7 @@ public class Controller implements AutoCloseable {
         SelectionQuery<Book> query = session.createSelectionQuery("FROM Book where isbn =?1", Book.class);
         query.setParameter(1,isbn);
         session.getTransaction().commit();
+        session.close();
 
         String temp = "";
         for (Book book : query.list()) {
@@ -301,6 +317,7 @@ public class Controller implements AutoCloseable {
         SelectionQuery<Book> query = session.createSelectionQuery("FROM Book where title = ?1", Book.class);
         query.setParameter(1,title);
         session.getTransaction().commit();
+        session.close();
 
         String temp = "";
         for (Book book : query.list()) {
@@ -322,6 +339,7 @@ public class Controller implements AutoCloseable {
         SelectionQuery<Book> query = session.createSelectionQuery("FROM Book where author_aid = ?", Book.class);
         query.setParameter(1,aid);
         session.getTransaction().commit();
+        session.close();
 
         String temp = "";
         for (Book book : query.list()) {
@@ -337,6 +355,7 @@ public class Controller implements AutoCloseable {
         SelectionQuery<Author> query = session.createSelectionQuery("FROM Author where name like %?1%", Author.class);
         query.setParameter(1,name);
         session.getTransaction().commit();
+        session.close();
 
         String temp = "";
         for (Author author : query.list()) {
@@ -349,10 +368,10 @@ public class Controller implements AutoCloseable {
         Session session = model.getSession();
         session.beginTransaction();
 
-        SelectionQuery<Author> query = session.createSelectionQuery("FROM ? where dob like %?%", Author.class);
-        query.setParameter(1,Author.class);
-        query.setParameter(2,dob);
+        SelectionQuery<Author> query = session.createSelectionQuery("FROM Author where dob like %?1%", Author.class);
+        query.setParameter(1,dob);
         session.getTransaction().commit();
+        session.close();
 
         String temp = "";
         for (Author author : query.list()) {
@@ -365,10 +384,10 @@ public class Controller implements AutoCloseable {
         Session session = model.getSession();
         session.beginTransaction();
 
-        SelectionQuery<Author> query = session.createSelectionQuery("FROM ? where gender = ?", Author.class);
-        query.setParameter(1,Author.class);
-        query.setParameter(2,gender);
+        SelectionQuery<Author> query = session.createSelectionQuery("FROM Author where gender = ?1", Author.class);
+        query.setParameter(1,gender);
         session.getTransaction().commit();
+        session.close();
 
         String temp = "";
         for (Author author : query.list()) {
@@ -381,10 +400,10 @@ public class Controller implements AutoCloseable {
         Session session = model.getSession();
         session.beginTransaction();
 
-        SelectionQuery<Store> query = session.createSelectionQuery("FROM ? where address like %?%", Store.class);
-        query.setParameter(1,Store.class);
-        query.setParameter(2,address);
+        SelectionQuery<Store> query = session.createSelectionQuery("FROM Store where address like %?1%", Store.class);
+        query.setParameter(1,address);
         session.getTransaction().commit();
+        session.close();
 
         String temp = "";
         for (Store store : query.list()) {
@@ -397,10 +416,10 @@ public class Controller implements AutoCloseable {
         Session session = model.getSession();
         session.beginTransaction();
 
-        SelectionQuery<Store> query = session.createSelectionQuery("FROM ? where owner like %?%", Store.class);
-        query.setParameter(1,Store.class);
-        query.setParameter(2,owner);
+        SelectionQuery<Store> query = session.createSelectionQuery("FROM Store where owner like %?1%", Store.class);
+        query.setParameter(1,owner);
         session.getTransaction().commit();
+        session.close();
 
         String temp = "";
         for (Store store : query.list()) {
@@ -413,10 +432,10 @@ public class Controller implements AutoCloseable {
         Session session = model.getSession();
         session.beginTransaction();
 
-        SelectionQuery<BookToStore> query = session.createSelectionQuery("FROM ? where book_bid = ?", BookToStore.class);
-        query.setParameter(1,BookToStore.class);
-        query.setParameter(2,bid);
+        SelectionQuery<BookToStore> query = session.createSelectionQuery("FROM BookToStore where book_bid = ?1", BookToStore.class);
+        query.setParameter(1,bid);
         session.getTransaction().commit();
+        session.close();
 
         String temp = "";
         for (BookToStore bookToStore : query.list()) {
@@ -467,30 +486,33 @@ public class Controller implements AutoCloseable {
         }
         session.persist(book);
         session.getTransaction().commit();
+        session.close();
     }
 
     public void printActiveBookWithId() {
         Session session = model.getSession();
         session.beginTransaction();
 
-        SelectionQuery<Book> query = session.createSelectionQuery("FROM VN_Books where active = 'true'", Book.class);
+        SelectionQuery<Book> query = session.createSelectionQuery("FROM Book where active = 'true'", Book.class);
 
         for (var thing : query.list()) {
             System.out.println(thing.getId() + " - " + thing.getTitle() + " - Active: " + thing.isActive());
         }
         session.getTransaction().commit();
+        session.close();
     }
 
     public void printInactiveBookWithId() {
         Session session = model.getSession();
         session.beginTransaction();
 
-        SelectionQuery<Book> query = session.createSelectionQuery("FROM VN_Books where active = 'false'", Book.class);
+        SelectionQuery<Book> query = session.createSelectionQuery("FROM Book where active = 'false'", Book.class);
 
         for (var thing : query.list()) {
             System.out.println(thing.getId() + " - " + thing.getTitle() + " - Active: " + thing.isActive());
         }
         session.getTransaction().commit();
+        session.close();
     }
 
     public void modifyBookActiveness(int bid) {
@@ -502,6 +524,7 @@ public class Controller implements AutoCloseable {
         book.setActive(!book.isActive());
 
         session.getTransaction().commit();
+        session.close();
     }
 
     public void modifyAuthor(int aid, Object[] modifiedAuthor) {
@@ -531,6 +554,7 @@ public class Controller implements AutoCloseable {
         }
         session.persist(author);
         session.getTransaction().commit();
+        session.close();
     }
 
     public void modifyStore(int sid, Object[] modifiedStore) {
@@ -553,30 +577,33 @@ public class Controller implements AutoCloseable {
 
         session.persist(store);
         session.getTransaction().commit();
+        session.close();
     }
 
     public void printActiveStoreWithId() {
         Session session = model.getSession();
         session.beginTransaction();
 
-        SelectionQuery<Store> query = session.createSelectionQuery("FROM VN_Stores where active = 'true'", Store.class);
+        SelectionQuery<Store> query = session.createSelectionQuery("FROM Store where active = 'true'", Store.class);
 
         for (var thing : query.list()) {
             System.out.println(thing.getId() + " - " + thing.getName() + " - Active: " + thing.isActive());
         }
         session.getTransaction().commit();
+        session.close();
     }
 
     public void printInactiveStoreWithId() {
         Session session = model.getSession();
         session.beginTransaction();
 
-        SelectionQuery<Store> query = session.createSelectionQuery("FROM VN_Stores where active = 'false'", Store.class);
+        SelectionQuery<Store> query = session.createSelectionQuery("FROM Store where active = 'false'", Store.class);
 
         for (var thing : query.list()) {
             System.out.println(thing.getId() + " - " + thing.getName() + " - Active: " + thing.isActive());
         }
         session.getTransaction().commit();
+        session.close();
     }
 
     public void modifyStoreActiveness(int sid) {
@@ -588,6 +615,7 @@ public class Controller implements AutoCloseable {
         store.setActive(!store.isActive());
 
         session.getTransaction().commit();
+        session.close();
     }
 
     public void printStores() {
@@ -598,23 +626,31 @@ public class Controller implements AutoCloseable {
 
         for (var thing : query.list()) {
             System.out.println(thing.getId() + " - " + thing.getName() + ", " + thing.getAddress() +
-                    "Owner: " + thing.getOwner() + "Books: " + thing.getBookList());
+                    ", Owner: " + thing.getOwner() + "Books: ");
+            for (var book : thing.getBookList()) {
+                System.out.print(book.getBook().getTitle() + "\n");
+            }
+            session.getTransaction().commit();
+            session.close();
         }
-        session.getTransaction().commit();
     }
 
-    public void printAllStores(){
-        Session session = model.getSession();
-        session.beginTransaction();
+    public void printAllStores() {
+            Session session = model.getSession();
+            session.beginTransaction();
 
-        SelectionQuery<Store> query = session.createSelectionQuery("FROM Store", Store.class);
+            SelectionQuery<Store> query = session.createSelectionQuery("FROM Store", Store.class);
 
-        for (var thing : query.list()) {
-            System.out.println(thing.getId() + " - " + thing.getName() + ", " + thing.getAddress() +
-                    "Owner: " + thing.getOwner() + "\nBooks: " + thing.getBookList());
+            for (var thing : query.list()) {
+                System.out.println(thing.getId() + " - " + thing.getName() + ", " + thing.getAddress() +
+                        ", Owner: " + thing.getOwner() + "\nBooks: ");
+                for (var book : thing.getBookList()) {
+                    System.out.print(book.getBook().getTitle() + "\n");
+                }
+                session.getTransaction().commit();
+                session.close();
+            }
         }
-        session.getTransaction().commit();
-    }
 
     public void printAuthors(){
         Session session = model.getSession();
@@ -624,9 +660,13 @@ public class Controller implements AutoCloseable {
 
         for (var thing : query.list()) {
             System.out.println(thing.getId() + " - " + thing.getName()+ " " + thing.getGender() + ", Born: "+ thing.getDob() +
-                    "\nBooks:" + thing.getBookList());
+                    "\nBooks: ");
+            for (var book : thing.getBookList()) {
+                System.out.print(book.getTitle() + "\n");
+            }
         }
         session.getTransaction().commit();
+        session.close();
     }
 
     public void printBooks(){
@@ -637,10 +677,14 @@ public class Controller implements AutoCloseable {
 
         for (var thing : query.list()) {
             System.out.println(thing.getId() + " - " + thing.getTitle() + ", Author: "+ thing.getAuthor().getName() +
-                    "\nEdition: "+thing.getEdition()+ " Isbn: "+thing.getIsbn() + " Publish date: "+thing.getDob() +
-                    "\nStores: "+thing.getStoreList());
+                    "\nEdition: "+thing.getEdition()+ ", Isbn: "+thing.getIsbn() + ", Publish date: "+thing.getDob() +
+                    "\nStores: ");
+            for (var store : thing.getStoreList()) {
+                System.out.print(store.getStore().getName() + ", " + store.getStore().getAddress() +"\n");
+            }
         }
         session.getTransaction().commit();
+        session.close();
     }
 
     public void printAllBooks(){
@@ -650,11 +694,16 @@ public class Controller implements AutoCloseable {
         SelectionQuery<Book> query = session.createSelectionQuery("FROM Book", Book.class);
 
         for (var thing : query.list()) {
-            System.out.println(thing.getId() + " - " + thing.getTitle() + ", Author: "+ thing.getAuthor().getName() +
-                    "\nEdition: "+thing.getEdition()+ " Isbn: "+thing.getIsbn() + " Publish date: "+thing.getDob() +
-                    "\nStores: "+thing.getStoreList());
+            System.out.println(thing.getId() + " - " + thing.getTitle() + ", Author: "+ thing.getAuthor().getName() + ", Active: " +
+                    thing.isActive() +
+                    "\nEdition: "+thing.getEdition()+ ", Isbn: "+thing.getIsbn() + ", Publish date: "+thing.getDob() +
+                    "\nStores: ");
+            for (var store : thing.getStoreList()) {
+                System.out.print(store.getStore().getName() + ", " + store.getStore().getAddress() +"\n");
+            }
         }
         session.getTransaction().commit();
+        session.close();
     }
 }
 /*
