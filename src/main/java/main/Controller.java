@@ -137,7 +137,8 @@ public class Controller implements AutoCloseable {
             try {
                 int sid = (Integer) newBook[5];
                 Store store = session.find(Store.class, sid);
-                book.getStoreList().add(new BookToStore(book, store, (Integer) newBook[6]));
+//                book.getStoreList().add(new BookToStore(book, store, (Integer) newBook[6]));
+
             } catch (Exception e) {
                 System.out.println("No such ID for Store\nBook Store not added");
             }
@@ -198,7 +199,7 @@ public class Controller implements AutoCloseable {
         for (int bookID : bookList.keySet()) {
             try {
                 Book book = session.find(Book.class, bookID);
-                store.getBookList().add(new BookToStore(book, store, bookList.get(bookID)));
+//                store.getBookList().add(new BookToStore(book, store, bookList.get(bookID)));
             } catch (Exception e) {
                 System.out.println("Book ID: " + bookID + ", does not exist. Not added");
             }
@@ -628,7 +629,7 @@ public class Controller implements AutoCloseable {
             System.out.println(thing.getId() + " - " + thing.getName() + ", " + thing.getAddress() +
                     ", Owner: " + thing.getOwner() + "Books: ");
             for (var book : thing.getBookList()) {
-                System.out.print(book.getBook().getTitle() + "\n");
+                System.out.print(book.getTitle() + "\n");
             }
             session.getTransaction().commit();
             session.close();
@@ -645,7 +646,7 @@ public class Controller implements AutoCloseable {
                 System.out.println(thing.getId() + " - " + thing.getName() + ", " + thing.getAddress() +
                         ", Owner: " + thing.getOwner() + "\nBooks: ");
                 for (var book : thing.getBookList()) {
-                    System.out.print(book.getBook().getTitle() + "\n");
+                    System.out.print(book.getTitle() + "\n");
                 }
                 session.getTransaction().commit();
                 session.close();
@@ -680,7 +681,7 @@ public class Controller implements AutoCloseable {
                     "\nEdition: "+thing.getEdition()+ ", Isbn: "+thing.getIsbn() + ", Publish date: "+thing.getDob() +
                     "\nStores: ");
             for (var store : thing.getStoreList()) {
-                System.out.print(store.getStore().getName() + ", " + store.getStore().getAddress() +"\n");
+                System.out.print(store.getName() + ", " + store.getAddress() +"\n");
             }
         }
         session.getTransaction().commit();
@@ -699,7 +700,7 @@ public class Controller implements AutoCloseable {
                     "\nEdition: "+thing.getEdition()+ ", Isbn: "+thing.getIsbn() + ", Publish date: "+thing.getDob() +
                     "\nStores: ");
             for (var store : thing.getStoreList()) {
-                System.out.print(store.getStore().getName() + ", " + store.getStore().getAddress() +"\n");
+                System.out.print(store.getName() + ", " + store.getAddress() +"\n");
             }
         }
         session.getTransaction().commit();

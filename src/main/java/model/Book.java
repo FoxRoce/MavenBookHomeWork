@@ -12,7 +12,7 @@ public class Book {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name = "bid")
-    private int id;
+    private Long id;
 
     @Column
     private String isbn;
@@ -32,16 +32,16 @@ public class Book {
     @ManyToOne
     private Author author;
 
-    @OneToMany(mappedBy = "book")
-    private List<BookToStore> storeList;
-
-//    @ManyToMany
-//    @JoinTable(
-//            name = "VN_Books_TO_VN_Stores",
-//            joinColumns = @JoinColumn(name = "book_bid"),
-//            inverseJoinColumns = @JoinColumn(name = "store_sid")
-//    )
+//    @OneToMany(mappedBy = "book")
 //    private List<BookToStore> storeList;
+
+    @ManyToMany
+    @JoinTable(
+            name = "VN_Books_TO_VN_Stores",
+            joinColumns = @JoinColumn(name = "book_bid"),
+            inverseJoinColumns = @JoinColumn(name = "store_sid")
+    )
+    private List<Store> storeList;
 
 
     //    ---------------------------------------------------------------------
@@ -49,7 +49,7 @@ public class Book {
 
     public Book(){}
 
-    public Book(int id, String isbn, LocalDate dob, int edition, String title, Author author, List<BookToStore> storeList) {
+    public Book(Long id, String isbn, LocalDate dob, int edition, String title, Author author, List<Store> storeList) {
         this.id = id;
         this.isbn = isbn;
         this.dob = dob;
@@ -61,7 +61,7 @@ public class Book {
 
     //    ---------------------------------------------------------------------
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -88,13 +88,13 @@ public class Book {
         return author;
     }
 
-    public List<BookToStore> getStoreList() {
+    public List<Store> getStoreList() {
         return storeList;
     }
 
     //    ---------------------------------------------------------------------
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public void setIsbn(String isbn) {
@@ -121,7 +121,7 @@ public class Book {
         this.author = author;
     }
 
-    public void setStoreList(List<BookToStore> storeList) {
+    public void setStoreList(List<Store> storeList) {
         this.storeList = storeList;
     }
 
@@ -142,7 +142,7 @@ public class Book {
                 ", storeList= ";
 
         for (var store : storeList) {
-            text += store.getStore().getName() + ", " + store.getStore().getAddress()+"\n";
+            text += store.getName() + ", " + store.getAddress()+"\n";
         }
         return text;
     }

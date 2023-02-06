@@ -6,24 +6,24 @@ import jakarta.persistence.*;
 @Table (name = "VN_Books_TO_VN_Stores")
 public class BookToStore {
 
-    @Id
-    @ManyToOne
-    private Book book;
-
-    @Id
-    @ManyToOne
-    private Store store;
-
-//    @EmbeddedId
-//    private BookToStore id;
-//
+//    @Id
 //    @ManyToOne
-//    @MapsId ("book_bid")
 //    private Book book;
 //
+//    @Id
 //    @ManyToOne
-//    @MapsId("store_sid")
 //    private Store store;
+
+    @EmbeddedId
+    private BookToStoreId id = new BookToStoreId();
+
+    @ManyToOne
+    @MapsId ("book_bid")
+    private Book book;
+
+    @ManyToOne
+    @MapsId("store_sid")
+    private Store store;
 
     @Column
     private int amount;

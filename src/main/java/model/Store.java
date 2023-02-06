@@ -11,7 +11,7 @@ public class Store {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name = "sid")
-    private int id;
+    private Long id;
 
     @Column
     private String name;
@@ -25,11 +25,11 @@ public class Store {
     @Column
     private boolean active = false;
 
-    @OneToMany(mappedBy = "store")
-    private List<BookToStore> bookList;
-
-//    @ManyToMany(mappedBy = "storeList")
+//    @OneToMany(mappedBy = "store")
 //    private List<BookToStore> bookList;
+
+    @ManyToMany(mappedBy = "storeList")
+    private List<Book> bookList;
 
 
 
@@ -37,7 +37,7 @@ public class Store {
     //    ---------------------------------------------------------------------
     public Store(){}
 
-    public Store(int id, String name, String address, String owner, List<BookToStore> bookList) {
+    public Store(Long id, String name, String address, String owner, List<Book> bookList) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -48,7 +48,7 @@ public class Store {
 
     //    ---------------------------------------------------------------------
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
     public String getName() {
@@ -63,7 +63,7 @@ public class Store {
         return owner;
     }
 
-    public List<BookToStore> getBookList() {
+    public List<Book> getBookList() {
         return bookList;
     }
 
@@ -75,7 +75,7 @@ public class Store {
 
     //    ---------------------------------------------------------------------
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public void setName(String name) {
@@ -90,7 +90,7 @@ public class Store {
         this.owner = owner;
     }
 
-    public void setBookList(List<BookToStore> bookList) {
+    public void setBookList(List<Book> bookList) {
         this.bookList = bookList;
     }
 
