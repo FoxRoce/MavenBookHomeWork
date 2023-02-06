@@ -28,7 +28,6 @@ public class BookToStore {
     @Column
     private int amount;
 
-    //    ---------------------------------------------------------------------
 
     public BookToStore(){}
 
@@ -38,7 +37,6 @@ public class BookToStore {
         this.amount = amount;
     }
 
-    //    ---------------------------------------------------------------------
 
     public Book getBook() {
         return book;
@@ -52,7 +50,6 @@ public class BookToStore {
         return amount;
     }
 
-    //    ---------------------------------------------------------------------
 
     public void setBook(Book book) {
         this.book = book;
@@ -66,7 +63,6 @@ public class BookToStore {
         this.amount = amount;
     }
 
-    //    ---------------------------------------------------------------------
 
     @Override
     public String toString() {

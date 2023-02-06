@@ -32,9 +32,6 @@ public class Store {
     private List<Book> bookList;
 
 
-
-
-    //    ---------------------------------------------------------------------
     public Store(){}
 
     public Store(Long id, String name, String address, String owner, List<Book> bookList) {
@@ -45,8 +42,6 @@ public class Store {
         this.bookList = bookList;
     }
 
-
-    //    ---------------------------------------------------------------------
 
     public Long getId() {
         return id;
@@ -73,8 +68,6 @@ public class Store {
 
 
 
-    //    ---------------------------------------------------------------------
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -98,19 +91,20 @@ public class Store {
         this.active = active;
     }
 
-    //    ---------------------------------------------------------------------
 
     @Override
     public String toString() {
-        return "Store{" +
+        String text = "Store{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", owner='" + owner + '\'' +
                 ", active=" + active +
-                ", bookList=" + bookList +
-                '}';
-    }
+                ", bookList= ";
+        for (var book : bookList) {
+            text += book.getTitle() + "\n";
+        }
+        return text;
 
-    //    ---------------------------------------------------------------------
+    }
 }

@@ -44,9 +44,6 @@ public class Book {
     private List<Store> storeList;
 
 
-    //    ---------------------------------------------------------------------
-
-
     public Book(){}
 
     public Book(Long id, String isbn, LocalDate dob, int edition, String title, Author author, List<Store> storeList) {
@@ -59,7 +56,6 @@ public class Book {
         this.storeList = storeList;
     }
 
-    //    ---------------------------------------------------------------------
 
     public Long getId() {
         return id;
@@ -92,7 +88,6 @@ public class Book {
         return storeList;
     }
 
-    //    ---------------------------------------------------------------------
 
     public void setId(Long id) {
         this.id = id;
@@ -126,9 +121,6 @@ public class Book {
     }
 
 
-    //    ---------------------------------------------------------------------
-
-
     @Override
     public String toString() {
         String text = "Book{" +
@@ -147,5 +139,4 @@ public class Book {
         return text;
     }
 
-    //    ---------------------------------------------------------------------
 }

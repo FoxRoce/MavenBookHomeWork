@@ -47,11 +47,10 @@ public class App {
 
             switch (option) {
                 case "0" -> {return;}
-                case "1" -> controller.createSession();
-                case "2" -> addBookMenu(sc);
-                case "3" -> addNewAuthorMenu(sc);
-                case "4" -> addNewStoreMenu(sc);
-                case "5" -> addBooksToStoreMenu(sc);
+                case "1" -> addBookMenu(sc);
+                case "2" -> addNewAuthorMenu(sc);
+                case "3" -> addNewStoreMenu(sc);
+                case "4" -> addBooksToStoreMenu(sc);
                 default -> System.out.println("Unknown option...");
             }
         }
@@ -60,11 +59,10 @@ public class App {
     private void printAddMenu(){
         System.out.println("=".repeat(30));
         System.out.println("\t0 - Back to Main Menu...");
-        System.out.println("\t1 - Create Session");
-        System.out.println("\t2 - Add New Book");
-        System.out.println("\t3 - Add New Author");
-        System.out.println("\t4 - Add New Store");
-        System.out.println("\t5 - Add Books to Store");
+        System.out.println("\t1 - Add New Book");
+        System.out.println("\t2 - Add New Author");
+        System.out.println("\t3 - Add New Store");
+        System.out.println("\t4 - Add Books to Store");
         System.out.println("=".repeat(30));
     }
 
@@ -87,7 +85,7 @@ public class App {
         author[0] = sc.nextLine();
         System.out.println("Author Dade of Birth? format: yyyy-mm-dd");
         author[1] = sc.nextLine();
-        System.out.println("Author Gender? male/female");
+        System.out.println("Author Gender? m/f");
         author[2] = sc.nextLine();
 
         return author;
@@ -95,7 +93,7 @@ public class App {
 
     private void addNewAuthorMenu(Scanner sc){
         Object[] author = addNewAuthor(sc);
-        controller.addNewAuthor(author);
+        controller.addOnlyNewAuthor(author);
         System.out.println("Done!");
     }
 
@@ -163,7 +161,7 @@ public class App {
             System.out.println(controller.getStoreById(sid));
         }
 
-        System.out.println("How many book you want to add to the store?");
+        System.out.println("How many kind of book do you want to add to the store?");
         int amount = sc.nextInt(); sc.nextLine();
         Map<Integer,Integer> bookIds = new HashMap<>();
         controller.printBooksWithId();
@@ -356,7 +354,11 @@ public class App {
             } case 3 -> {
                 System.out.println("Write the Gender, m/f :");
                 String gender = sc.nextLine();
-                System.out.println(controller.getAuthorByGender(gender));
+                if (gender.toLowerCase().equals("m")){
+                    System.out.println(controller.getAuthorByGender(true));
+                } else if (gender.toLowerCase().equals("f")) {
+                    System.out.println(controller.getAuthorByGender(false));
+                }
             }default -> System.out.println("No such option\nReturning to search menu...");
         }
     }
@@ -546,7 +548,7 @@ public class App {
         author[0] = sc.nextLine();
         System.out.println("\n\tDate of Birth? format: yyyy-mm-dd");
         author[1] = sc.nextLine();
-        System.out.println("\n\tGender? male/female");
+        System.out.println("\n\tGender? m/f");
         author[2] = sc.nextLine();
 
         controller.modifyAuthor(aid,author);
@@ -591,8 +593,8 @@ public class App {
                 Scanner sc = new Scanner(System.in);
                 Controller c = new Controller()
         ) {
-//            m.controller.print3StoreWithBooksBellow10();
             m.controller = c;
+            m.controller.print3StoreWithBooksBellow10();
             m.mainMenu(sc);
         }
     }

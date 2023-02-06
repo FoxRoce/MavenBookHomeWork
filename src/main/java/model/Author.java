@@ -21,16 +21,15 @@ public class Author {
     private LocalDate dob;
 
     @Column
-    private Gender gender;
+    private boolean gender;
 
     @OneToMany (mappedBy = "author")
     private List<Book> bookList;
 
-    //    ---------------------------------------------------------------------
 
     public Author(){}
 
-    public Author(int id, String name, LocalDate dob, Gender gender, List<Book> bookList) {
+    public Author(int id, String name, LocalDate dob, boolean gender, List<Book> bookList) {
         this.id = id;
         this.name = name;
         this.dob = dob;
@@ -38,7 +37,6 @@ public class Author {
         this.bookList = bookList;
     }
 
-    //    ---------------------------------------------------------------------
 
     public int getId() {
         return id;
@@ -52,7 +50,7 @@ public class Author {
         return dob;
     }
 
-    public Gender getGender() {
+    public boolean getGender() {
         return gender;
     }
 
@@ -60,7 +58,6 @@ public class Author {
         return bookList;
     }
 
-    //    ---------------------------------------------------------------------
 
     public void setId(int id) {
         this.id = id;
@@ -74,7 +71,7 @@ public class Author {
         this.dob = dob;
     }
 
-    public void setGender(Gender gender) {
+    public void setGender(boolean gender) {
         this.gender = gender;
     }
 
@@ -82,7 +79,6 @@ public class Author {
         this.bookList = bookList;
     }
 
-    //    ---------------------------------------------------------------------
 
     @Override
     public String toString() {
@@ -90,14 +86,12 @@ public class Author {
                     "id=" + id +
                     ", name='" + name + '\'' +
                     ", dob=" + dob +
-                    ", gender=" + gender +
-                    ", bookList=";
+                    ", gender=" + (gender ? "Male" : "Female") +
+                    ", bookList= ";
         for (var book : bookList) {
             text += book.getTitle() + "\n";
-
         }
         return text;
     }
 
-    //    ---------------------------------------------------------------------
 }
