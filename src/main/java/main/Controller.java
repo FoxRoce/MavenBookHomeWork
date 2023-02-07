@@ -240,6 +240,13 @@ public class Controller implements AutoCloseable {
             System.out.println("No such ID\nAuthor not removed");
             return;
         }
+//        SelectionQuery<Book> query = session.createSelectionQuery("FROM Book b where b.author_aid = ?1", Book.class);
+//        query.setParameter(1,id);
+//
+//        for (var thing : query.list()) {
+//            thing.setAuthor(null);
+//        }
+
         session.remove(author);
         session.getTransaction().commit();
         session.close();
@@ -256,6 +263,13 @@ public class Controller implements AutoCloseable {
             System.out.println("No such ID\nStore not removed");
             return;
         }
+//        SelectionQuery<BookToStore> query = session.createSelectionQuery("FROM BookToStore b where b.store_sid = ?1", BookToStore.class);
+//        query.setParameter(1,id);
+//
+//        for (var thing : query.list()) {
+//           thing.setStore(null);
+//        }
+
         session.remove(store);
         session.getTransaction().commit();
         session.close();
@@ -651,7 +665,7 @@ public class Controller implements AutoCloseable {
 
         for (var thing : query.list()) {
             System.out.println(thing.getId() + " - " + thing.getName() + ", " + thing.getAddress() +
-                    ", Owner: " + thing.getOwner() + "Books: ");
+                    ", Owner: " + thing.getOwner() + "\n Books: ");
             for (var book : thing.getBookList()) {
                 System.out.print(book.getTitle() + "\n");
             }
@@ -668,7 +682,7 @@ public class Controller implements AutoCloseable {
 
             for (var thing : query.list()) {
                 System.out.println(thing.getId() + " - " + thing.getName() + ", " + thing.getAddress() +
-                        ", Owner: " + thing.getOwner() + "\nBooks: ");
+                        ", Owner: " + thing.getOwner() + "\n Books: ");
                 for (var book : thing.getBookList()) {
                     System.out.print(book.getTitle() + "\n");
                 }
@@ -685,7 +699,7 @@ public class Controller implements AutoCloseable {
 
         for (var thing : query.list()) {
             System.out.println(thing.getId() + " - " + thing.getName()+ " " + (thing.getGender() ? "male" : "female") + ", Born: "+ thing.getDob() +
-                    "\nBooks: ");
+                    "\n Books: ");
             for (var book : thing.getBookList()) {
                 System.out.print(book.getTitle() + "\n");
             }
