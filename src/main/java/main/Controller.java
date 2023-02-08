@@ -3,6 +3,7 @@ package main;
 import model.*;
 import org.hibernate.PersistentObjectException;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 import org.hibernate.query.SelectionQuery;
 
 import java.time.LocalDate;
@@ -229,75 +230,71 @@ public class Controller implements AutoCloseable {
         session.close();
     }
 
-    public void removeAuthor(int id) {
+    private void removeAuthorFromBooks(int id){
         Session session = model.getSession();
         session.beginTransaction();
 
-        Author author;
-        try {
-            author = session.find(Author.class, id);
-        } catch (Exception e) {
-            System.out.println("No such ID\nAuthor not removed");
-            return;
-        }
-//        SelectionQuery<Book> query = session.createSelectionQuery("FROM Book b where b.author_aid = ?1", Book.class);
-//        query.setParameter(1,id);
-//
-//        for (var thing : query.list()) {
-//            thing.setAuthor(null);
-//        }
+        String line = "UPDATE Book b SET b.author = null WHERE b.author.id =: authorId";
+        Query query = session.createQuery(line);
+        query.setParameter("authorId", id);
+        query.executeUpdate();
+        session.getTransaction().commit();
 
+    }
+
+    public void removeAuthor(int id) {
+        removeAuthorFromBooks(id);
+        Session session = model.getSession();
+        session.beginTransaction();
+
+        Author author = session.find(Author.class, id);
         session.remove(author);
+
         session.getTransaction().commit();
         session.close();
     }
 
-    public void removeStore(int id) {
+    private void removeStoreFromBookToStore(int id){
         Session session = model.getSession();
         session.beginTransaction();
 
-        Store store;
-        try {
-            store = session.find(Store.class, id);
-        } catch (Exception e) {
-            System.out.println("No such ID\nStore not removed");
-            return;
-        }
-//        SelectionQuery<BookToStore> query = session.createSelectionQuery("FROM BookToStore b where b.store_sid = ?1", BookToStore.class);
-//        query.setParameter(1,id);
-//
-//        for (var thing : query.list()) {
-//           thing.setStore(null);
-//        }
+        String line = "DELETE FROM BookToStore b WHERE b.store.id =: storeId";
+        Query query = session.createQuery(line);
+        query.setParameter("storeId", id);
+        query.executeUpdate();
+        session.getTransaction().commit();
 
+    }
+
+    public void removeStore(int id) {
+        removeStoreFromBookToStore(id);
+        Session session = model.getSession();
+        session.beginTransaction();
+
+        Store store = session.find(Store.class, id);
         session.remove(store);
+
         session.getTransaction().commit();
         session.close();
+
     }
 
     public void removeBooksFromStore(int sid, int[] bookIds) {
         Session session = model.getSession();
-        session.beginTransaction();
-
-        Store store;
-        try {
-            store = session.find(Store.class, sid);
-        } catch (Exception e) {
-            System.out.println("No such ID\nStore not modified");
-            return;
-        }
 
         for (int bookId : bookIds) {
             try {
-                session.find(Book.class, bookId);
+                session.beginTransaction();
 
-                String line = "Delete From BookToStore b where b.store_sid =?1 and b.book_bid =?2";
-                SelectionQuery<?> query = session.createSelectionQuery(line);
-                query.setParameter(1, sid);
-                query.setParameter(2, bookId);
+                String line = "DELETE FROM BookToStore b WHERE b.store.id =: storeId AND b.book.id =: bookId";
+                Query query = session.createQuery(line);
+                query.setParameter("storeId", sid);
+                query.setParameter("bookId", bookId);
+                query.executeUpdate();
 
                 session.getTransaction().commit();
             } catch (Exception e) {
+                e.printStackTrace();
                 System.out.println("No such Book ID\nBook not removed from store");
             }
         }
@@ -744,4 +741,6 @@ public class Controller implements AutoCloseable {
 //        session.getTransaction().commit();
         session.close();
     }
+
+
 }

@@ -104,14 +104,14 @@ public class App {
         System.out.println("Book ISBN?");
         book[1] = sc.nextLine();
         System.out.println("Book Edition?");
-        book[2] = sc.nextInt(); sc.nextLine();
+        book[2] = Integer.parseInt(sc.nextLine());
         System.out.println("Book publish date? format: yyyy-mm-dd");
         book[3] = sc.nextLine();
 
         if (author.equals("n")){
             controller.printAuthorsWithId();
             System.out.println("\nAuthor ID?");
-            book[4] = sc.nextInt(); sc.nextLine();
+            book[4] = Integer.parseInt(sc.nextLine());
         } else {
             book[4] = addNewAuthor(sc);
         }
@@ -119,9 +119,9 @@ public class App {
         if (store.equals("y")){
             controller.printStoresWithId();
             System.out.println("Store ID?");
-            book[5] = sc.nextInt(); sc.nextLine();
+            book[5] = Integer.parseInt(sc.nextLine());
             System.out.println("Amount of Book to send to the Store?");
-            book[6] = sc.nextInt(); sc.nextLine();
+            book[6] = Integer.parseInt(sc.nextLine());
         }
 
         return book;
@@ -152,7 +152,7 @@ public class App {
     private void addBooksToStoreMenu(Scanner sc){
         controller.printStoresWithId();
         System.out.println("Which Store you want to add?\nPlease Write Store ID:");
-        int sid = sc.nextInt(); sc.nextLine();
+        int sid = Integer.parseInt(sc.nextLine());
 
         if (controller.getStoreById(sid).equals("No such ID")){
             System.out.println("No such ID!\n\nReturning to Add menu...");
@@ -162,7 +162,7 @@ public class App {
         }
 
         System.out.println("How many kind of book do you want to add to the store?");
-        int amount = sc.nextInt(); sc.nextLine();
+        int amount = Integer.parseInt(sc.nextLine());
         Map<Integer,Integer> bookIds = new HashMap<>();
         controller.printBooksWithId();
         System.out.println("Which books you want to add?\nPlease write Book ID-s");
@@ -207,7 +207,7 @@ public class App {
     private void removeAuthorMenu(Scanner sc){
         controller.printAuthorsWithId();
         System.out.println("\n\nWhich Author you want to remove?\nPlease write the Author id:");
-        int aid = sc.nextInt(); sc.nextLine();
+        int aid = Integer.parseInt(sc.nextLine());
 
         if (controller.getAuthorById(aid).equals("No such ID")){
             System.out.println("No such ID!\n\nReturning to remove menu...");
@@ -228,7 +228,7 @@ public class App {
     private void removeStoreMenu(Scanner sc){
         controller.printStoresWithId();
         System.out.println("\n\nWhich Store you want to remove?\nPlease write the Store ID:");
-        int sid = sc.nextInt(); sc.nextLine();
+        int sid = Integer.parseInt(sc.nextLine());
 
         if (controller.getStoreById(sid).equals("No such ID")){
             System.out.println("No such ID!\n\nReturning to remove menu...");
@@ -249,7 +249,7 @@ public class App {
     private void removeBookFromStoreMenu(Scanner sc){
         controller.printStoresWithId();
         System.out.println("\n\nWhich Store you want to remove books from?\nPlease write the Store ID:");
-        int sid = sc.nextInt(); sc.nextLine();
+        int sid = Integer.parseInt(sc.nextLine());
 
         if (controller.getStoreById(sid).equals("No such ID")){
             System.out.println("No such ID!\n\nReturning to remove menu...");
@@ -259,7 +259,7 @@ public class App {
         }
 
         System.out.println("How many book you want to remove from the store?");
-        int amount = sc.nextInt(); sc.nextLine();
+        int amount = Integer.parseInt(sc.nextLine());
         int[] bookIds = new int[amount];
         controller.printBooksWithId();
         System.out.println("Which books you want to remove?\nPlease write Book ID-s");
@@ -317,7 +317,7 @@ public class App {
                 "\n\t1 - ISBN" +
                 "\n\t2 - Title" +
                 "\n\t3 - Author");
-        int option = sc.nextInt(); sc.nextLine();
+        int option = Integer.parseInt(sc.nextLine());
         switch (option) {
             case 1 -> {
                 System.out.println("Write ISBN:");
@@ -330,7 +330,7 @@ public class App {
             } case 3 -> {
                 controller.printAuthorsWithId();
                 System.out.println("\nPlease write the Author ID:");
-                int aid = sc.nextInt(); sc.nextLine();
+                int aid = Integer.parseInt(sc.nextLine());
                 System.out.println(controller.getBookByAuthor(aid));
             }default -> System.out.println("No such option\nReturning to search menu...");
         }
@@ -341,7 +341,7 @@ public class App {
                 "\n\t1 - Name" +
                 "\n\t2 - Date of Birth" +
                 "\n\t3 - Gender");
-        int option = sc.nextInt(); sc.nextLine();
+        int option = Integer.parseInt(sc.nextLine());
         switch (option) {
             case 1 -> {
                 System.out.println("Write Name:");
@@ -368,7 +368,7 @@ public class App {
                 "\n\t1 - Address" +
                 "\n\t2 - Owner" +
                 "\n\t3 - Book");
-        int option = sc.nextInt(); sc.nextLine();
+        int option = Integer.parseInt(sc.nextLine());
         switch (option) {
             case 1 -> {
                 System.out.println("Write Address:");
@@ -381,7 +381,7 @@ public class App {
             } case 3 -> {
                 controller.printBooksWithId();
                 System.out.println("\n\nWhich book you want to search by?\nPlease write the book ID:");
-                int bid = sc.nextInt(); sc.nextLine();
+                int bid = Integer.parseInt(sc.nextLine());
 
                 if (controller.getBookById(bid).equals("No such ID")){
                     System.out.println("No such ID!\n\nReturning to search menu...");
@@ -427,7 +427,7 @@ public class App {
     private void modifyBookMenu(Scanner sc){
         controller.printBooksWithId();
         System.out.println("\n\nWhich book you want to modify?\nPlease write the book id:");
-        int bid = sc.nextInt(); sc.nextLine();
+        int bid = Integer.parseInt(sc.nextLine());
 
         if (controller.getBookById(bid).equals("No such ID")){
             System.out.println("No such ID!\n\nReturning to modify menu...");
@@ -444,7 +444,7 @@ public class App {
         System.out.println("\n\tDate of Publish? format: yyyy-mm-dd");
         book[1] = sc.nextLine();
         System.out.println("\n\tEdition?");
-        book[2] = sc.nextInt(); sc.nextLine();
+        book[2] = Integer.parseInt(sc.nextLine());
         System.out.println("\n\tTitle?");
         book[3] = sc.nextLine();
 
@@ -457,7 +457,7 @@ public class App {
             if (option2.equals("y")) {
                 controller.printAuthorsWithId();
                 System.out.println("\nWhich Author ID?");
-                book[4] = sc.nextInt(); sc.nextLine();
+                book[4] = Integer.parseInt(sc.nextLine());
             } else {
                 book[4] = addNewAuthor(sc);
             }
@@ -469,7 +469,7 @@ public class App {
     private void modifyActiveBookMenu(Scanner sc){
         System.out.println("1 - Change ACTIVE book to Inactive" +
                             "\n2 - Change INACTIVE book to Active");
-        int option = sc.nextInt(); sc.nextLine();
+        int option = Integer.parseInt(sc.nextLine());
         if (option == 1){
             controller.printActiveBookWithId();
         } else if (option == 2) {
@@ -480,7 +480,7 @@ public class App {
         }
 
         System.out.println("Please write Book ID:");
-        int bid = sc.nextInt(); sc.nextLine();
+        int bid = Integer.parseInt(sc.nextLine());
 
         if (controller.getBookById(bid).equals("No such ID")){
             System.out.println("No such ID!\n\nReturning to modify menu...");
@@ -501,7 +501,7 @@ public class App {
     private void modifyActiveStoreMenu(Scanner sc){
         System.out.println("1 - Change ACTIVE Store to Inactive" +
                 "\n2 - Change INACTIVE Store to Active");
-        int option = sc.nextInt(); sc.nextLine();
+        int option = Integer.parseInt(sc.nextLine());
         if (option == 1){
             controller.printActiveStoreWithId();
         } else if (option == 2) {
@@ -512,7 +512,7 @@ public class App {
         }
 
         System.out.println("Please write Store ID:");
-        int bid = sc.nextInt(); sc.nextLine();
+        int bid = Integer.parseInt(sc.nextLine());
 
         if (controller.getStoreById(bid).equals("No such ID")){
             System.out.println("No such ID!\n\nReturning to modify menu...");
@@ -533,7 +533,7 @@ public class App {
     private void modifyAuthorMenu(Scanner sc){
         controller.printAuthorsWithId();
         System.out.println("\n\nWhich Author you want to modify?\nPlease write the Author id:");
-        int aid = sc.nextInt(); sc.nextLine();
+        int aid = Integer.parseInt(sc.nextLine());
 
         if (controller.getAuthorById(aid).equals("No such ID")){
             System.out.println("No such ID!\n\nReturning to modify menu...");
@@ -559,7 +559,7 @@ public class App {
     private void modifyStoreMenu(Scanner sc){
         controller.printStoresWithId();
         System.out.println("\n\nWhich Store you want to modify?\nPlease write the Store id:");
-        int sid = sc.nextInt(); sc.nextLine();
+        int sid = Integer.parseInt(sc.nextLine());
 
         if (controller.getStoreById(sid).equals("No such ID")){
             System.out.println("No such ID!\n\nReturning to modify menu...");
