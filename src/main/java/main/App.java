@@ -154,7 +154,7 @@ public class App {
         System.out.println("Which Store you want to add?\nPlease Write Store ID:");
         int sid = Integer.parseInt(sc.nextLine());
 
-        if (controller.getStoreById(sid).equals("No such ID")){
+        if (controller.getStoreById(sid) == null ){
             System.out.println("No such ID!\n\nReturning to Add menu...");
             return;
         } else {
@@ -209,7 +209,7 @@ public class App {
         System.out.println("\n\nWhich Author you want to remove?\nPlease write the Author id:");
         int aid = Integer.parseInt(sc.nextLine());
 
-        if (controller.getAuthorById(aid).equals("No such ID")){
+        if (controller.getAuthorById(aid) == null){
             System.out.println("No such ID!\n\nReturning to remove menu...");
             return;
         } else {
@@ -230,7 +230,7 @@ public class App {
         System.out.println("\n\nWhich Store you want to remove?\nPlease write the Store ID:");
         int sid = Integer.parseInt(sc.nextLine());
 
-        if (controller.getStoreById(sid).equals("No such ID")){
+        if (controller.getStoreById(sid) == null){
             System.out.println("No such ID!\n\nReturning to remove menu...");
             return;
         } else {
@@ -251,7 +251,7 @@ public class App {
         System.out.println("\n\nWhich Store you want to remove books from?\nPlease write the Store ID:");
         int sid = Integer.parseInt(sc.nextLine());
 
-        if (controller.getStoreById(sid).equals("No such ID")){
+        if (controller.getStoreById(sid) == null){
             System.out.println("No such ID!\n\nReturning to remove menu...");
             return;
         } else {
@@ -383,7 +383,7 @@ public class App {
                 System.out.println("\n\nWhich book you want to search by?\nPlease write the book ID:");
                 int bid = Integer.parseInt(sc.nextLine());
 
-                if (controller.getBookById(bid).equals("No such ID")){
+                if (controller.getBookById(bid) == null){
                     System.out.println("No such ID!\n\nReturning to search menu...");
                     return;
                 } else {
@@ -429,7 +429,7 @@ public class App {
         System.out.println("\n\nWhich book you want to modify?\nPlease write the book id:");
         int bid = Integer.parseInt(sc.nextLine());
 
-        if (controller.getBookById(bid).equals("No such ID")){
+        if (controller.getBookById(bid) == null){
             System.out.println("No such ID!\n\nReturning to modify menu...");
             return;
         } else {
@@ -482,7 +482,7 @@ public class App {
         System.out.println("Please write Book ID:");
         int bid = Integer.parseInt(sc.nextLine());
 
-        if (controller.getBookById(bid).equals("No such ID")){
+        if (controller.getBookById(bid) == null){
             System.out.println("No such ID!\n\nReturning to modify menu...");
             return;
         } else {
@@ -514,7 +514,7 @@ public class App {
         System.out.println("Please write Store ID:");
         int bid = Integer.parseInt(sc.nextLine());
 
-        if (controller.getStoreById(bid).equals("No such ID")){
+        if (controller.getStoreById(bid) == null){
             System.out.println("No such ID!\n\nReturning to modify menu...");
             return;
         } else {
@@ -535,7 +535,7 @@ public class App {
         System.out.println("\n\nWhich Author you want to modify?\nPlease write the Author id:");
         int aid = Integer.parseInt(sc.nextLine());
 
-        if (controller.getAuthorById(aid).equals("No such ID")){
+        if (controller.getAuthorById(aid) == null){
             System.out.println("No such ID!\n\nReturning to modify menu...");
             return;
         } else {
@@ -561,7 +561,7 @@ public class App {
         System.out.println("\n\nWhich Store you want to modify?\nPlease write the Store id:");
         int sid = Integer.parseInt(sc.nextLine());
 
-        if (controller.getStoreById(sid).equals("No such ID")){
+        if (controller.getStoreById(sid) == null){
             System.out.println("No such ID!\n\nReturning to modify menu...");
             return;
         } else {

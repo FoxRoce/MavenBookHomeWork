@@ -65,46 +65,31 @@ public class Controller implements AutoCloseable {
         session.close();
     }
 
-    public String getBookById(int id) {
+    public Book getBookById(int id) {
         Session session = model.getSession();
 
         session.beginTransaction();
         Book book = session.find(Book.class, id);
         session.close();
-
-        if (book == null) {
-            return "No such ID";
-        } else {
-            return book.getId() +" - "+book.getTitle()+" ("+book.getIsbn()+")" + ", Author: "+book.getAuthor().getName();
-        }
+        return book;
     }
 
-    public String getAuthorById(int id) {
+    public Author getAuthorById(int id) {
         Session session = model.getSession();
 
         session.beginTransaction();
         Author author = session.find(Author.class, id);
         session.close();
-
-        if (author == null) {
-            return "No such ID";
-        } else {
-            return author.getId() + " - " + author.getName();
-        }
+        return author;
     }
 
-    public String getStoreById(int id) {
+    public Store getStoreById(int id) {
         Session session = model.getSession();
 
         session.beginTransaction();
         Store store = session.find(Store.class, id);
         session.close();
-
-        if (store == null) {
-            return "No such ID";
-        } else {
-            return store.getId() + " - " + store.getName() +", "+ store.getAddress();
-        }
+        return store;
     }
 
     public void addNewBook(Object[] newBook) {
