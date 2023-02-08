@@ -86,11 +86,11 @@ public class Author {
                     "id=" + id +
                     ", name='" + name + '\'' +
                     ", dob=" + dob +
-                    ", gender=" + (gender ? "Male" : "Female") +
-                    ", bookList= ";
-        for (var book : bookList) {
-            text += book.getTitle() + "\n";
-        }
+                    ", gender=" + (gender ? "Male" : "Female");
+//                    ", bookList= ";
+//        for (var book : bookList) {
+//            text += book.getTitle() + "\n";
+//        }
         return text;
     }
 

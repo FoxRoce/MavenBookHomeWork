@@ -99,11 +99,11 @@ public class Store {
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", owner='" + owner + '\'' +
-                ", active=" + active +
-                ", bookList= ";
-        for (var book : bookList) {
-            text += book.getTitle() + "\n";
-        }
+                ", active=" + active;
+//                ", bookList= ";
+//        for (var book : bookList) {
+//            text += book.getTitle() + "\n";
+//        }
         return text;
 
     }
