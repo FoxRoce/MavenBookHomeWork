@@ -697,7 +697,13 @@ public class Controller implements AutoCloseable {
         SelectionQuery<Book> query = session.createSelectionQuery("FROM Book b where b.active = true", Book.class);
 
         for (var thing : query.list()) {
-            System.out.println(thing.getId() + " - " + thing.getTitle() + ", Author: "+ thing.getAuthor().getName() +
+            String authorName = "";
+            try{
+                authorName = thing.getAuthor().getName();
+            } catch (NullPointerException e){
+                authorName = "Anonym";
+            }
+            System.out.println(thing.getId() + " - " + thing.getTitle() + ", Author: "+ authorName +
                     "\nEdition: "+thing.getEdition()+ ", Isbn: "+thing.getIsbn() + ", Publish date: "+thing.getDob() +
                     "\nStores: ");
             for (var store : thing.getStoreList()) {
@@ -715,7 +721,13 @@ public class Controller implements AutoCloseable {
         SelectionQuery<Book> query = session.createSelectionQuery("FROM Book", Book.class);
 
         for (var thing : query.list()) {
-            System.out.println(thing.getId() + " - " + thing.getTitle() + ", Author: "+ thing.getAuthor().getName() + ", Active: " +
+            String authorName = "";
+            try{
+                authorName = thing.getAuthor().getName();
+            } catch (NullPointerException e){
+                authorName = "Anonym";
+            }
+            System.out.println(thing.getId() + " - " + thing.getTitle() + ", Author: "+ authorName + ", Active: " +
                     thing.isActive() +
                     "\nEdition: "+thing.getEdition()+ ", Isbn: "+thing.getIsbn() + ", Publish date: "+thing.getDob() +
                     "\nStores: ");

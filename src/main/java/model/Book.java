@@ -123,6 +123,12 @@ public class Book {
 
     @Override
     public String toString() {
+        String authorName = "";
+        try{
+            authorName = author.getName();
+        } catch (NullPointerException e){
+            authorName = "Anonym";
+        }
         String text = "Book{" +
                 "id=" + id +
                 ", isbn='" + isbn + '\'' +
@@ -130,7 +136,7 @@ public class Book {
                 ", edition=" + edition +
                 ", title='" + title + '\'' +
                 ", active=" + active +
-                ", author=" + author.getName() +
+                ", author=" + authorName +
                 ", storeList= ";
 
         for (var store : storeList) {
