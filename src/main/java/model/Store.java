@@ -1,10 +1,14 @@
 package model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 @Table (name = "VN_Stores")
 public class Store {
 
@@ -40,55 +44,6 @@ public class Store {
         this.address = address;
         this.owner = owner;
         this.bookList = bookList;
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-    public String getName() {
-        return name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public List<Book> getBookList() {
-        return bookList;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    public void setBookList(List<Book> bookList) {
-        this.bookList = bookList;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
     }
 
 

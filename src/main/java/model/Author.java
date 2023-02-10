@@ -1,11 +1,15 @@
 package model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 @Table (name = "VN_Authors")
 public class Author {
 
@@ -37,46 +41,8 @@ public class Author {
         this.bookList = bookList;
     }
 
-
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public LocalDate getDob() {
-        return dob;
-    }
-
     public boolean getGender() {
         return gender;
-    }
-
-    public List<Book> getBookList() {
-        return bookList;
-    }
-
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDob(LocalDate dob) {
-        this.dob = dob;
-    }
-
-    public void setGender(boolean gender) {
-        this.gender = gender;
-    }
-
-    public void setBookList(List<Book> bookList) {
-        this.bookList = bookList;
     }
 
 

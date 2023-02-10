@@ -1,8 +1,12 @@
 package model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 @Table (name = "VN_Books_TO_VN_Stores")
 public class BookToStore {
 
@@ -34,32 +38,6 @@ public class BookToStore {
     public BookToStore(Book book, Store store, int amount) {
         this.book = book;
         this.store = store;
-        this.amount = amount;
-    }
-
-
-    public Book getBook() {
-        return book;
-    }
-
-    public Store getStore() {
-        return store;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-
-    public void setBook(Book book) {
-        this.book = book;
-    }
-
-    public void setStore(Store store) {
-        this.store = store;
-    }
-
-    public void setAmount(int amount) {
         this.amount = amount;
     }
 
