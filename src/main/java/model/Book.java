@@ -129,15 +129,14 @@ public class Book {
         } catch (NullPointerException e){
             authorName = "Anonym";
         }
-        String text = "Book{" +
-                "id=" + id +
-                ", isbn='" + isbn + '\'' +
-                ", dob=" + dob +
-                ", edition=" + edition +
-                ", title='" + title + '\'' +
-                ", active=" + active +
-                ", author=" + authorName +
-                ", storeList= ";
+        String text ="'n(id: "+id+") "+ "Book" +
+                "\n\tISBN='" + isbn + '\'' +
+                "\n\tDate of Publish=" + dob +
+                "\n\tEdition=" + edition +
+                "\n\tTitle='" + title + '\'' +
+                "\n\tActive=" + (active ? "Yes" : "No") +
+                "\n\tAuthor=" + authorName +
+                "\n\tStore List= ";
 
         for (var store : storeList) {
             text += store.getName() + ", " + store.getAddress()+"\n";

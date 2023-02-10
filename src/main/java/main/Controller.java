@@ -33,7 +33,7 @@ public class Controller implements AutoCloseable {
         SelectionQuery<Book> query = session.createSelectionQuery("FROM Book", Book.class);
 
         for (var thing : query.list()) {
-            System.out.println(thing.getId() + " - " + thing.getTitle());
+            System.out.println("\n"+thing.getId() + " - " + thing.getTitle());
         }
 //        session.getTransaction().commit();
         session.close();
@@ -46,7 +46,9 @@ public class Controller implements AutoCloseable {
         SelectionQuery<Author> query = session.createSelectionQuery("FROM Author", Author.class);
 
         for (var thing : query.list()) {
-            System.out.println(thing.getId() + " - " + thing.getName());
+            if (thing != null) {
+                System.out.println("\n" + thing.getId() + " - " + thing.getName());
+            }
         }
 //        session.getTransaction().commit();
         session.close();
@@ -59,7 +61,7 @@ public class Controller implements AutoCloseable {
         SelectionQuery<Store> query = session.createSelectionQuery("FROM Store", Store.class);
 
         for (var thing : query.list()) {
-            System.out.println(thing.getId() + " - " + thing.getName() + ", " + thing.getAddress());
+            System.out.println("\n"+thing.getId() + " - " + thing.getName() + ", " + thing.getAddress());
         }
 //        session.getTransaction().commit();
         session.close();
@@ -293,7 +295,7 @@ public class Controller implements AutoCloseable {
         SelectionQuery<BookToStore> query = session.createSelectionQuery("FROM BookToStore", BookToStore.class);
 
         for (var thing : query.list()) {
-            System.out.println(thing.getStore().getName() + " - " + thing.getBook().getTitle() + ", Amount: " + thing.getAmount());
+            System.out.println("\n"+thing.getStore().getName() + " - " + thing.getBook().getTitle() + ", Amount: " + thing.getAmount());
         }
 //        session.getTransaction().commit();
         session.close();
@@ -306,7 +308,7 @@ public class Controller implements AutoCloseable {
         SelectionQuery<BookToStore> query = session.createSelectionQuery("FROM BookToStore b where b.amount < 10 order by b.amount limit 3", BookToStore.class);
 
         for (var thing : query.list()) {
-            System.out.println(thing.getStore().getName() + " - " + thing.getBook().getTitle() + ", Amount: " + thing.getAmount());
+            System.out.println("\n"+thing.getStore().getName() + " - " + thing.getBook().getTitle() + ", Amount: " + thing.getAmount());
         }
 //        session.getTransaction().commit();
         session.close();
@@ -515,7 +517,7 @@ public class Controller implements AutoCloseable {
         SelectionQuery<Book> query = session.createSelectionQuery("FROM Book b where b.active = true", Book.class);
 
         for (var thing : query.list()) {
-            System.out.println(thing.getId() + " - " + thing.getTitle() + " - Active: " + thing.isActive());
+            System.out.println("\n"+thing.getId() + " - " + thing.getTitle() + " - Active: " + thing.isActive());
         }
 //        session.getTransaction().commit();
         session.close();
@@ -528,7 +530,7 @@ public class Controller implements AutoCloseable {
         SelectionQuery<Book> query = session.createSelectionQuery("FROM Book b where b.active = false", Book.class);
 
         for (var thing : query.list()) {
-            System.out.println(thing.getId() + " - " + thing.getTitle() + " - Active: " + thing.isActive());
+            System.out.println("\n"+thing.getId() + " - " + thing.getTitle() + " - Active: " + thing.isActive());
         }
 //        session.getTransaction().commit();
         session.close();
@@ -608,7 +610,7 @@ public class Controller implements AutoCloseable {
         SelectionQuery<Store> query = session.createSelectionQuery("FROM Store s where s.active = true", Store.class);
 
         for (var thing : query.list()) {
-            System.out.println(thing.getId() + " - " + thing.getName() + " - Active: " + thing.isActive());
+            System.out.println("\n"+thing.getId() + " - " + thing.getName() + " - Active: " + thing.isActive());
         }
 //        session.getTransaction().commit();
         session.close();
@@ -621,7 +623,7 @@ public class Controller implements AutoCloseable {
         SelectionQuery<Store> query = session.createSelectionQuery("FROM Store s where s.active = false", Store.class);
 
         for (var thing : query.list()) {
-            System.out.println(thing.getId() + " - " + thing.getName() + " - Active: " + thing.isActive());
+            System.out.println("\n"+thing.getId() + " - " + thing.getName() + " - Active: " + thing.isActive());
         }
 //        session.getTransaction().commit();
         session.close();
@@ -646,10 +648,14 @@ public class Controller implements AutoCloseable {
         SelectionQuery<Store> query = session.createSelectionQuery("FROM Store s where s.active = true", Store.class);
 
         for (var thing : query.list()) {
-            System.out.println(thing.getId() + " - " + thing.getName() + ", " + thing.getAddress() +
+            System.out.println("\n"+thing.getId() + " - " + thing.getName() + ", " + thing.getAddress() +
                     ", Owner: " + thing.getOwner() + "\n Books: ");
-            for (var book : thing.getBookList()) {
-                System.out.print(book.getTitle() + "\n");
+            try {
+                for (var book : thing.getBookList()) {
+                    System.out.print(book.getTitle() + "\n");
+                }
+            }catch (Exception e){
+                System.out.println("No Books in the Store.");
             }
 //            session.getTransaction().commit();
             session.close();
@@ -663,10 +669,14 @@ public class Controller implements AutoCloseable {
             SelectionQuery<Store> query = session.createSelectionQuery("FROM Store", Store.class);
 
             for (var thing : query.list()) {
-                System.out.println(thing.getId() + " - " + thing.getName() + ", " + thing.getAddress() +
+                System.out.println("\n"+thing.getId() + " - " + thing.getName() + ", " + thing.getAddress() +
                         ", Owner: " + thing.getOwner() + "\n Books: ");
-                for (var book : thing.getBookList()) {
-                    System.out.print(book.getTitle() + "\n");
+                try {
+                    for (var book : thing.getBookList()) {
+                        System.out.print(book.getTitle() + "\n");
+                    }
+                }catch (Exception e){
+                    System.out.println("No Books in the Store.");
                 }
 //                session.getTransaction().commit();
                 session.close();
@@ -680,10 +690,12 @@ public class Controller implements AutoCloseable {
         SelectionQuery<Author> query = session.createSelectionQuery("FROM Author", Author.class);
 
         for (var thing : query.list()) {
-            System.out.println(thing.getId() + " - " + thing.getName()+ " " + (thing.getGender() ? "male" : "female") + ", Born: "+ thing.getDob() +
-                    "\n Books: ");
-            for (var book : thing.getBookList()) {
-                System.out.print(book.getTitle() + "\n");
+            if (thing != null) {
+                System.out.println("\n" + thing.getId() + " - " + thing.getName() + " " + (thing.getGender() ? "male" : "female") + ", Born: " + thing.getDob() +
+                        "\n Books: ");
+                for (var book : thing.getBookList()) {
+                    System.out.print(book.getTitle() + "\n");
+                }
             }
         }
 //        session.getTransaction().commit();
@@ -703,7 +715,7 @@ public class Controller implements AutoCloseable {
             } catch (NullPointerException e){
                 authorName = "Anonym";
             }
-            System.out.println(thing.getId() + " - " + thing.getTitle() + ", Author: "+ authorName +
+            System.out.println("\n"+thing.getId() + " - " + thing.getTitle() + ", Author: "+ authorName +
                     "\nEdition: "+thing.getEdition()+ ", Isbn: "+thing.getIsbn() + ", Publish date: "+thing.getDob() +
                     "\nStores: ");
             for (var store : thing.getStoreList()) {
@@ -727,7 +739,7 @@ public class Controller implements AutoCloseable {
             } catch (NullPointerException e){
                 authorName = "Anonym";
             }
-            System.out.println(thing.getId() + " - " + thing.getTitle() + ", Author: "+ authorName + ", Active: " +
+            System.out.println("\n"+thing.getId() + " - " + thing.getTitle() + ", Author: "+ authorName + ", Active: " +
                     thing.isActive() +
                     "\nEdition: "+thing.getEdition()+ ", Isbn: "+thing.getIsbn() + ", Publish date: "+thing.getDob() +
                     "\nStores: ");

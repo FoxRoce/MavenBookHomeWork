@@ -66,10 +66,9 @@ public class BookToStore {
 
     @Override
     public String toString() {
-        return "BookToStore{" +
-                "book=" + book.getTitle() +
-                ", store=" + store.getName() + ", " + store.getAddress() +
-                ", amount=" + amount +
-                '}';
+        return "\nBookToStore" +
+                "\n\tbook=" + book.getTitle() +
+                "\n\tstore=" + store.getName() + ", " + store.getAddress() +
+                "\n\tamount=" + amount;
     }
 }

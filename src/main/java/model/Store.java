@@ -94,16 +94,14 @@ public class Store {
 
     @Override
     public String toString() {
-        String text = "Store{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", owner='" + owner + '\'' +
-                ", active=" + active;
-//                ", bookList= ";
+        String text ="\n(id: "+id+") "+ "Store" +
+                "\n\tName='" + name + '\'' +
+                "\n\tAddress='" + address + '\'' +
+                "\n\tOwner='" + owner + '\'' +
+                "\n\tActive=" + (active ? "Yes" : "No");
+//                "\n\tBook List= ";
 //        for (var book : bookList) {
 //            text += book.getTitle() + "\n";
-//        }
         return text;
 
     }

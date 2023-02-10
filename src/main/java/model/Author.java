@@ -82,15 +82,13 @@ public class Author {
 
     @Override
     public String toString() {
-        String text = "Author{" +
-                    "id=" + id +
-                    ", name='" + name + '\'' +
-                    ", dob=" + dob +
-                    ", gender=" + (gender ? "Male" : "Female");
-//                    ", bookList= ";
+        String text ="\n(id: "+id+") "+ "Author" +
+                    "\n\tName='" + name + '\'' +
+                    "\n\tDate of Birth=" + dob +
+                    "\n\tGender=" + (gender ? "Male" : "Female");
+//                    "\n\tBook List= ";
 //        for (var book : bookList) {
 //            text += book.getTitle() + "\n";
-//        }
         return text;
     }
 
