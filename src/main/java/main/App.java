@@ -8,7 +8,6 @@ public class App {
 
     private Controller controller;
 
-    //    --------------------------------------------------------------------
 
     private void mainMenu(Scanner sc) {
         while (true){
@@ -37,7 +36,6 @@ public class App {
         System.out.println("=".repeat(30));
     }
 
-    //    --------------------------------------------------------------------
 
     private void addMenu(Scanner sc){
         while (true){
@@ -177,7 +175,6 @@ public class App {
 
     }
 
-    //    --------------------------------------------------------------------
 
     private void removeMenu(Scanner sc){
         while (true){
@@ -271,7 +268,6 @@ public class App {
 
     }
 
-    //    --------------------------------------------------------------------
 
     private void searchMenu(Scanner sc){
         while (true){
@@ -393,7 +389,6 @@ public class App {
         }
     }
 
-    //    --------------------------------------------------------------------
 
     private void modifyMenu(Scanner sc){
         while (true){
@@ -584,7 +579,6 @@ public class App {
 
     }
 
-//    --------------------------------------------------------------------
 
     public static void main(String[] args) throws Exception {
         App m = new App();
